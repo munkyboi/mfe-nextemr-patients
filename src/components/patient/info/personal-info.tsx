@@ -103,7 +103,7 @@ export default function PatientPersonalInfo() {
                 <p className="text-sm font-medium text-muted-foreground">
                   Height
                 </p>
-                <p>5&apos;11" (180 cm)</p>
+                <p>5&apos;11&quot; (180 cm)</p>
               </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">
@@ -138,7 +138,7 @@ export default function PatientPersonalInfo() {
                 <p className="text-sm font-medium text-muted-foreground">
                   Height
                 </p>
-                <p>5&apos;11" (180 cm)</p>
+                <p>5&apos;11&quot; (180 cm)</p>
               </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">
