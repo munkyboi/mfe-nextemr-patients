@@ -6,7 +6,7 @@ import PatientPersonalInfo from './info/personal-info';
 
 export default function ProfileScreen() {
   return (
-    <div className="container mx-auto">
+    <div className="fluid mx-auto">
       <Card className="border-none shadow-none m-0 p-0">
         <CardHeader className="relative h-48 p-0">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-green-500 rounded-t-lg" />
