@@ -8,10 +8,17 @@ import { cn } from '@/lib/utils';
 import { useSidebar } from './sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface IActionButton {
+  label: ReactNode;
+  onClick: () => void;
+  icon?: ReactNode;
+}
+
 interface IFloatingAlert {
+  variant?: 'positive' | 'destructive' | 'info' | 'warning' | 'default';
   icon?: ReactNode;
   description: ReactNode;
-  onAction?: () => void;
+  actionButton: IActionButton;
   exitable?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -20,9 +27,10 @@ interface IFloatingAlert {
 }
 
 export const FloatingAlert: FC<IFloatingAlert> = ({
+  variant = 'default',
   icon = <CircleAlert className="h-8 w-8" />,
   description,
-  onAction,
+  actionButton,
   exitable = true,
   open: controlledOpen,
   onOpenChange,
@@ -33,6 +41,23 @@ export const FloatingAlert: FC<IFloatingAlert> = ({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const getButtonCss = () => {
+    let css = 'bg-white text-gray-800 hover:bg-white/50 border-white/50';
+    if (variant === 'positive')
+      css =
+        'bg-white shadow-xs hover:bg-green-600 text-green-500 hover:text-white';
+    if (variant === 'destructive')
+      css = 'bg-white shadow-xs hover:bg-red-600 text-red-500 hover:text-white';
+    if (variant === 'info')
+      css =
+        'bg-white shadow-xs hover:bg-blue-600 text-blue-500 hover:text-white';
+    if (variant === 'warning')
+      css =
+        'bg-white shadow-xs hover:bg-orange-600 text-orange-500 hover:text-white';
+    return css;
+  };
+
   const handleOpenChange = useCallback(
     (newOpen: boolean) => {
       if (!isControlled) {
@@ -71,19 +96,23 @@ export const FloatingAlert: FC<IFloatingAlert> = ({
             className="pointer-events-auto max-w-md mx-auto"
           >
             <Alert
-              variant="positive"
+              variant={variant}
               className="text-[12px] w-auto items-center justify-start p-2 min-h-[42px]"
             >
               {icon}
               <AlertDescription>
                 <div className="w-full flex flex-row flex-nowrap gap-4 items-center">
                   <div className="flex-grow">{description}</div>
-                  {onAction && (
+                  {actionButton && (
                     <Button
-                      className="text-[12px] px-4 py-2 h-auto leading-2 bg-white shadow-xs hover:bg-green-600 text-green-500 hover:text-white dark:bg-input/30 dark:border-input dark:hover:bg-input/50"
-                      onClick={onAction}
+                      className={cn(
+                        'text-[12px] px-4 py-2 h-auto leading-2',
+                        getButtonCss()
+                      )}
+                      onClick={actionButton.onClick}
                     >
-                      Serve now
+                      {actionButton.icon && actionButton.icon}
+                      {actionButton.label}
                     </Button>
                   )}
                   {exitable && (

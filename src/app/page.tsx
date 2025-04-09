@@ -10,6 +10,9 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [isInQueue, setIsInQueue] = useState(false);
+  const handleServeNow = () => {
+    setIsInQueue(false);
+  };
   useEffect(() => {
     setTimeout(() => {
       setIsInQueue(true);
@@ -22,7 +25,7 @@ export default function Home() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="tab-1">
-          <TabsList className="inset-shadow-sm/15">
+          <TabsList>
             <ScrollArea className="w-full">
               <div className="flex flex-nowrap items-center justify-start">
                 <TabsTrigger value="tab-1">Info</TabsTrigger>
@@ -45,12 +48,19 @@ export default function Home() {
           <TabsContent value="tab-1">
             <ProfileScreen />
             <FloatingAlert
+              variant="positive"
               open={isInQueue}
               onOpenChange={setIsInQueue}
+              actionButton={{
+                label: 'Serve now',
+                onClick: handleServeNow
+              }}
               description={
                 <>
-                  <span className="font-bold">Tambling, Ben</span> is currently
-                  in queue #12
+                  <span>
+                    <span className="font-bold">Tambling, Ben</span> is
+                    currently in queue #12
+                  </span>
                 </>
               }
             />
