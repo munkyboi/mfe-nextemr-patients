@@ -1,10 +1,20 @@
+'use client';
+
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { PatientSearchBox } from '@/components/patient/patient-search-box';
 import ProfileScreen from '@/components/patient/patient-info';
+import FloatingAlert from '@/components/ui/floating-alert';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [isInQueue, setIsInQueue] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsInQueue(true);
+    }, 1000);
+  }, []);
   return (
     <Card>
       <CardHeader>
@@ -13,7 +23,7 @@ export default function Home() {
       <CardContent>
         <Tabs defaultValue="tab-1">
           <TabsList>
-            <ScrollArea className="h-[33px] w-full">
+            <ScrollArea className="w-full">
               <div className="flex flex-nowrap items-center justify-start">
                 <TabsTrigger value="tab-1">Info</TabsTrigger>
                 <TabsTrigger value="tab-2">Labs</TabsTrigger>
@@ -34,6 +44,16 @@ export default function Home() {
           </TabsList>
           <TabsContent value="tab-1">
             <ProfileScreen />
+            <FloatingAlert
+              open={isInQueue}
+              onOpenChange={setIsInQueue}
+              description={
+                <>
+                  <span className="font-bold">Tambling, Ben</span> is currently
+                  in queue #12
+                </>
+              }
+            />
           </TabsContent>
           <TabsContent value="tab-2">
             <p className="p-4 text-center text-xs text-muted-foreground">

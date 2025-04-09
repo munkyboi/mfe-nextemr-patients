@@ -9,15 +9,23 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
+  NavigationMenuTrigger
 } from '@/components/ui/navigation-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { SidebarTrigger } from '../ui/sidebar';
+import { SidebarTrigger, useSidebar } from '../ui/sidebar';
 import { CalendarDaysIcon, ListIcon } from 'lucide-react';
 
 export default function Header() {
+  const { open } = useSidebar();
   return (
-    <div className={cn('header sticky flex flex-nowrap h-[50px] z-50')}>
+    <div
+      className={cn(
+        'header fixed top-0 right-0 left-0 md:left-[256px] px-4 bg-background flex flex-nowrap h-16 z-50 transition-[left]',
+        {
+          'md:left-0': !open
+        }
+      )}
+    >
       <div className="flex justify-start items-center w-full">
         <NavigationMenu className={cn('grow  flex items-center')}>
           <NavigationMenuList className={cn('gap-0')}>
@@ -26,10 +34,7 @@ export default function Header() {
               className={cn('border-r border-gray-300 ml-2 pr-2')}
             >
               <NavigationMenuTrigger>
-                <ListIcon
-                  size={16}
-                  className={cn('mr-2')}
-                />
+                <ListIcon size={16} className={cn('mr-2')} />
                 <span className="hidden sm:inline-block">Queue</span>
                 <NavigationMenuContent>
                   <div>xxxcxcxcxcx</div>
@@ -44,10 +49,7 @@ export default function Header() {
             </NavigationMenuItem>
             <NavigationMenuItem className={cn('ml-2')}>
               <NavigationMenuTrigger>
-                <CalendarDaysIcon
-                  size={16}
-                  className={cn('mr-2')}
-                />
+                <CalendarDaysIcon size={16} className={cn('mr-2')} />
                 <span className="hidden sm:inline-block">Appointments</span>
                 <NavigationMenuContent>
                   <div>asdfasdfasdf</div>
@@ -99,7 +101,7 @@ const ListItem = React.forwardRef<
           ref={ref}
           className={cn(
             'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-            className,
+            className
           )}
           {...props}
         >

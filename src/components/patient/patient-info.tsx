@@ -1,49 +1,64 @@
-import { Mail, Pen } from 'lucide-react';
+import { AtSign, MapPin, Mail, Pen, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import PatientPersonalInfo from './info/personal-info';
+import { Separator } from '../ui/separator';
 
 export default function ProfileScreen() {
   return (
     <div className="fluid mx-auto">
-      <Card className="border-none shadow-none m-0 p-0">
-        <CardHeader className="relative h-48 p-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-green-500 rounded-t-lg" />
-          <div className="absolute -bottom-16 left-8">
-            <Avatar className="h-32 w-32 border-4 border-background">
-              <AvatarImage
-                src="https://emroneair.netlify.app/img/profile.jpg"
-                alt="User"
-              />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-          </div>
-          <div className="absolute top-4 right-4 flex gap-2">
+      <div className="flex flex-col sm:flex-row flex-nowrap gap-y-4 sm:gap-4">
+        <div className="relative w-full sm:w-[200px] flex flex-col justify-start items-center space-y-1">
+          <Avatar className="aspect-square h-[200px] w-[200px] border-4 border-background mb-4">
+            <AvatarImage
+              src="https://emroneair.netlify.app/img/profile.jpg"
+              alt="User"
+            />
+            <AvatarFallback>BT</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-nowrap items-center justify-center gap-2">
             <Button
               variant="outline"
               size="sm"
-              className="bg-background/80 backdrop-blur-sm"
+              className="bg-background/80 backdrop-blur-sm text-[12px]"
             >
-              <Mail className="h-4 w-4 mr-2" />
+              <Mail className="h-2 w-2 mr-2" />
               Message
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="bg-background/80 backdrop-blur-sm"
+              className="bg-background/80 backdrop-blur-sm text-[12px]"
             >
-              <Pen className="h-4 w-4 mr-2" />
+              <Pen className="h-2 w-2 mr-2" />
               Edit
             </Button>
           </div>
-        </CardHeader>
-        <CardContent className="p-0 pt-20 pb-6">
-          <div className="space-y-4">
-            <PatientPersonalInfo />
+          <div className="flex flex-col justify-center w-full rounded-md border mt-4">
+            <div className="flex flex-nowrap flex-row justify-center items-center gap-2 p-2">
+              <Phone className="h-4 w-4" />
+              <span className="text-[12px] leading-6">0915 1234-5678</span>
+            </div>
+            <Separator />
+            <div className="flex flex-nowrap flex-row justify-center items-center gap-2 p-2">
+              <AtSign className="h-4 w-4" />
+              <span className="text-[12px] leading-6">
+                john.doe@emailmenow.com
+              </span>
+            </div>
+            <Separator />
+            <div className="flex flex-nowrap flex-row justify-center items-center gap-2 p-2">
+              <MapPin className="h-4 w-4" />
+              <span className="text-[12px] leading-6">
+                Cebu City, Cebu 6000
+              </span>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="flex-grow">
+          <PatientPersonalInfo />
+        </div>
+      </div>
     </div>
   );
 }

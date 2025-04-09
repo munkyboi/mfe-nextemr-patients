@@ -10,7 +10,7 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarMenuItem
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
@@ -21,27 +21,28 @@ const items = [
     title: 'Patients',
     url: '#',
     icon: User,
-    active: true,
+    active: true
   },
   {
     title: 'Inventory',
     url: '#',
-    icon: Container,
+    icon: Container
   },
   {
     title: 'Point-of-Sale',
     url: '#',
-    icon: HandCoins,
-  },
+    icon: HandCoins
+  }
 ];
 
 export function AppSidebar() {
   return (
-    <Sidebar
-      variant="floating"
-      className={cn('px-0 py-4 rounded-tl-none ring-0 z-600')}
-    >
-      <SidebarHeader className={cn('h-[40px]')}>NextEMR</SidebarHeader>
+    <Sidebar variant="sidebar" className={cn('z-600')}>
+      <SidebarHeader className="h-16 flex justify-center items-start px-4">
+        <h1 className="text-xl font-thin text-gray-900">
+          Next<span className="text-blue-500 font-bold">EMR</span>
+        </h1>
+      </SidebarHeader>
       <Separator className={cn('bg-gray-200')} />
       <SidebarContent>
         <SidebarGroup>
@@ -58,14 +59,11 @@ export function AppSidebar() {
                         'text-white': item.active,
                         'bg-blue-500': item.active,
                         'hover:bg-blue-800': item.active,
-                        'hover:text-white': item.active,
-                      },
+                        'hover:text-white': item.active
+                      }
                     )}
                   >
-                    <a
-                      href={item.url}
-                      className={cn('block w-full px-4 py-2')}
-                    >
+                    <a href={item.url} className={cn('block w-full px-4 py-2')}>
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
@@ -80,7 +78,7 @@ export function AppSidebar() {
         <SidebarMenuButton
           asChild
           className={cn(
-            'text-gray-900 bg-inherit hover:bg-gray-200 cursor-pointer dark:bg-gray-800 dark:text-white dark:bg-slate-900 dark:hover:bg-slate-800',
+            'text-gray-900 bg-inherit hover:bg-gray-200 cursor-pointer dark:bg-gray-800 dark:text-white dark:bg-slate-900 dark:hover:bg-slate-800'
           )}
         >
           <a href="#">

@@ -7,21 +7,21 @@ import Header from '@/components/layout/Header';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
-  subsets: ['latin'],
+  subsets: ['latin']
 });
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
-  subsets: ['latin'],
+  subsets: ['latin']
 });
 
 export const metadata: Metadata = {
   title: 'NextEMR',
-  description: 'Probably the most advanced EMR',
+  description: 'Probably the most advanced EMR'
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -39,9 +39,9 @@ export default function RootLayout({
       >
         <SidebarProvider>
           <AppSidebar />
-          <main className="w-full relative px-4 overflow-x-hidden">
+          <main className="w-full relative px-4 pb-4 overflow-x-hidden">
             <Header />
-            <div className="content w-full">{children}</div>
+            <div className="content w-full pt-16">{children}</div>
           </main>
         </SidebarProvider>
       </body>
