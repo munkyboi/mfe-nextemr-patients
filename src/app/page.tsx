@@ -22,7 +22,7 @@ export default function Home() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="tab-1">
-          <TabsList>
+          <TabsList className="inset-shadow-sm/15">
             <ScrollArea className="w-full">
               <div className="flex flex-nowrap items-center justify-start">
                 <TabsTrigger value="tab-1">Info</TabsTrigger>
