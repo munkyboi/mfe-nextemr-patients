@@ -92,8 +92,8 @@ export const FloatingAlert: FC<IFloatingAlert> = ({
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="pointer-events-auto max-w-md mx-auto"
+            transition={{ type: 'spring', damping: 15, stiffness: 400 }}
+            className="pointer-events-auto"
           >
             <Alert
               variant={variant}
