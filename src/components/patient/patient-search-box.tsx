@@ -43,7 +43,7 @@ function PatientSearchBox() {
     (id: string) => {
       setSelectedPatient(id);
       if (patientsData) {
-        const patient: IPatient = patientsData.find(
+        const patient: IPatient | undefined = patientsData.find(
           (n: IPatient) => n.id === id
         );
         selectPatient(patient);
@@ -107,7 +107,7 @@ function PatientSearchBox() {
                           currentValue
                         );
                         handleSelectPatient(
-                          currentValue === selectedPatient ? null : currentValue
+                          currentValue === selectedPatient ? '' : currentValue
                         );
                         setOpen(false);
                       }}
