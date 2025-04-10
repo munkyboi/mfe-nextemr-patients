@@ -8,92 +8,71 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
+  CommandList
 } from '@/components/ui/command';
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
+  PopoverTrigger
 } from '@/components/ui/popover';
-import { Check, ChevronDown } from 'lucide-react';
-import { useId, useState } from 'react';
+import { Check, ChevronDown, User } from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
 import PatientSearchActions from './patient-search-actions';
-
-const patientsData = [
-  {
-    value: 'Tambling, Ben',
-    label: 'Tambling, Ben',
-  },
-  {
-    value: 'Wong, Sam Ting',
-    label: 'Wong, Sam Ting',
-  },
-  {
-    value: 'Tout, Phalau',
-    label: 'Tout, Phalau',
-  },
-  {
-    value: 'Kogmo, Ken',
-    label: 'Kogmo, Ken',
-  },
-  {
-    value: 'Yupay, Manu',
-    label: 'Yupay, Manu',
-  },
-  {
-    value: 'Fukiko, Ma. Antot',
-    label: 'Fukiko, Ma. Antot',
-  },
-  {
-    value: 'Harus, Kononeh',
-    label: 'Harus, Kononeh',
-  },
-  {
-    value: 'Morgan, Botbot',
-    label: 'Morgan, Botbot',
-  },
-  {
-    value: 'Vuto, Katul',
-    label: 'Vuto, Katul',
-  },
-  {
-    value: 'Luvey, Libre',
-    label: 'Luvey, Libre',
-  },
-  {
-    value: 'Proton, Bolgas',
-    label: 'Proton, Bolgas',
-  },
-  {
-    value: 'Kundun, Kuto',
-    label: 'Kundun, Kuto',
-  },
-];
+import { IPatient, usePatients } from '@/app/context/patients.context';
+import { getPatientFullName, isSearchMatched } from '@/app/utils/utils';
+import { useDebounce } from '@/hooks/use-debounce';
 
 function PatientSearchBox() {
-  const id = useId();
-  const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string>('');
+  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [search, setSearch] = useState('');
+  const debouncedQuery = useDebounce(searchQuery, 500);
+  const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
+  const {
+    patients: patientsData,
+    selectedPatient: selectedPatientData,
+    selectPatient
+  } = usePatients();
+
+  const handleSearchQuery = (query: string) => {
+    setSearch(query);
+    if (query.length >= 4 || query === '') setSearchQuery(query);
+  };
+
+  const handleSelectPatient = useCallback(
+    (id: string) => {
+      setSelectedPatient(id);
+      if (patientsData) {
+        const patient: IPatient = patientsData.find(
+          (n: IPatient) => n.id === id
+        );
+        selectPatient(patient);
+      }
+    },
+    [patientsData, selectPatient]
+  );
+
+  if (!patientsData) return null;
+
+  console.log('----------------- patientsData', patientsData);
+  console.log('----------------- selectedPatient', selectedPatient);
+  console.log('----------------- selectedPatientData', selectedPatientData);
 
   return (
     <div className="space-y-2 min-w-[300px] flex flex-nowrap flex-row">
-      <Popover
-        open={open}
-        onOpenChange={setOpen}
-      >
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            id={id}
             variant="outline"
             role="combobox"
             aria-expanded={open}
             className="flex-grow justify-between bg-background px-3 font-normal outline-offset-0 hover:bg-background focus-visible:border-ring focus-visible:outline-[3px] focus-visible:outline-ring/20 rounded-tr-none rounded-br-none m-0"
           >
-            <span className={cn('truncate', !value && 'text-muted-foreground')}>
-              {value
-                ? patientsData.find((patient) => patient.value === value)?.label
-                : 'Select patient'}
-            </span>
+            {selectedPatient
+              ? getPatientFullName(
+                  patientsData.find((patient) => patient.id === selectedPatient)
+                )
+              : 'Search patients...'}
             <ChevronDown
               size={16}
               strokeWidth={2}
@@ -106,30 +85,72 @@ function PatientSearchBox() {
           className="w-full min-w-[var(--radix-popper-anchor-width)] border-input p-0"
           align="end"
         >
-          <Command>
-            <CommandInput placeholder="Search patient..." />
+          <Command shouldFilter={false}>
+            <CommandInput
+              placeholder="Search by name, ID, or condition..."
+              value={search}
+              onValueChange={handleSearchQuery}
+            />
             <CommandList>
               <CommandEmpty>No patient found.</CommandEmpty>
               <CommandGroup>
-                {patientsData.map((patient) => (
-                  <CommandItem
-                    key={patient.value}
-                    value={patient.value}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? '' : currentValue);
-                      setOpen(false);
-                    }}
-                  >
-                    {patient.label}
-                    {value === patient.value && (
+                {patientsData
+                  .filter((patient) => isSearchMatched(patient, debouncedQuery))
+                  .slice(0, 50) // Limit to 10 results for better performance
+                  .map((patient) => (
+                    <CommandItem
+                      key={patient.id}
+                      value={patient.id}
+                      onSelect={(currentValue) => {
+                        console.log(
+                          'ccccccccccccccccc currentValue',
+                          currentValue
+                        );
+                        handleSelectPatient(
+                          currentValue === selectedPatient ? null : currentValue
+                        );
+                        setOpen(false);
+                      }}
+                      className={cn({
+                        'bg-blue-500': patient.id === selectedPatient,
+                        'text-white': patient.id === selectedPatient
+                      })}
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      <div className="flex flex-col">
+                        <span>{getPatientFullName(patient)}</span>
+                        <span
+                          className={cn('text-xs text-muted-foreground', {
+                            'text-white/70': patient.id === selectedPatient
+                          })}
+                        >
+                          ID: {patient.id}
+                        </span>
+                      </div>
                       <Check
-                        size={16}
-                        strokeWidth={2}
-                        className="ml-auto"
+                        className={cn(
+                          'ml-auto h-4 w-4',
+                          selectedPatient === patient.id
+                            ? 'opacity-100'
+                            : 'opacity-0'
+                        )}
                       />
-                    )}
-                  </CommandItem>
-                ))}
+                    </CommandItem>
+                  ))}
+                {debouncedQuery &&
+                  patientsData.filter((patient) =>
+                    isSearchMatched(patient, debouncedQuery)
+                  ).length > 10 && (
+                    <div className="py-2 px-2 text-xs text-muted-foreground text-center">
+                      Showing 10 of{' '}
+                      {
+                        patientsData.filter((patient) =>
+                          isSearchMatched(patient, debouncedQuery)
+                        ).length
+                      }{' '}
+                      results. Refine your search for more specific results.
+                    </div>
+                  )}
               </CommandGroup>
             </CommandList>
           </Command>

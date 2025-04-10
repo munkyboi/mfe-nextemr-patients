@@ -1,3 +1,9 @@
+import { usePatients } from '@/app/context/patients.context';
+import {
+  getPatientAddress,
+  getPatientAge,
+  getPatientFullName
+} from '@/app/utils/utils';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -10,6 +16,8 @@ import { CollapsibleCard } from '@/components/ui/collapsible-card';
 import LabelValue from '@/components/ui/label-value';
 
 export default function PatientPersonalInfo() {
+  const { selectedPatient } = usePatients();
+  if (!selectedPatient) return null;
   return (
     <div>
       <div className="gap-4 columns-xs">
@@ -18,10 +26,14 @@ export default function PatientPersonalInfo() {
             <div className="flex items-center gap-4">
               <div>
                 <CardTitle className="text-2xl flex items-center">
-                  Tambling, Ben{' '}
-                  <Badge className="ml-2 text-[10px] bg-blue-500">VIP</Badge>
+                  {getPatientFullName(selectedPatient)}{' '}
+                  {selectedPatient.vip && (
+                    <Badge className="ml-2 text-[10px] bg-blue-500">VIP</Badge>
+                  )}
                 </CardTitle>
-                <CardDescription>Patient ID: 12345678</CardDescription>
+                <CardDescription>
+                  Patient ID: {selectedPatient.id}
+                </CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -29,28 +41,51 @@ export default function PatientPersonalInfo() {
             <div className="columns-none md:columns-2 gap-4">
               <LabelValue
                 label="Date of birth"
-                value="April 15, 1985 (38 years)"
+                value={`${selectedPatient.date_of_birth} (${getPatientAge(selectedPatient)} yrs. old)`}
               />
-              <LabelValue label="Gender" value="Male" />
-              <LabelValue label="Marital status" value="Single" />
-              <LabelValue label="Nationality" value="American" />
+              <LabelValue label="Gender" value={selectedPatient.gender} />
+              <LabelValue
+                label="Marital status"
+                value={selectedPatient.marital_status}
+              />
+              <LabelValue
+                label="Nationality"
+                value={selectedPatient.nationality}
+              />
               <LabelValue
                 label="Address"
-                value="Street 123, Road Name Ave., Cebu City, Cebu, Philippines 6000"
+                value={getPatientAddress(selectedPatient)}
               />
               <LabelValue label="Emergency contact" value="Vouhgtae, Marlon" />
-              <LabelValue label="Blood type" value="O Positive" />
+              <LabelValue
+                label="Blood type"
+                value={selectedPatient.blood_type}
+              />
               <LabelValue label="Primary physician" value="Dr. Sarah Johnson" />
               <LabelValue
                 label="Registered facility"
-                value="Cosmopolitan Clinic"
+                value={selectedPatient.registered_facility}
               />
-              <LabelValue label="Member since" value="12 March 2004" />
+              <LabelValue
+                label="Member since"
+                value={selectedPatient.registered_date}
+              />
               <LabelValue
                 label="Last visit"
                 value={
                   <>
-                    14 Feb 2024 <span className="text-gray-400">(Monday)</span>
+                    {new Date(selectedPatient.last_visit).toLocaleDateString()}{' '}
+                    <span className="text-gray-400">
+                      (
+                      {new Date(selectedPatient.last_visit).toLocaleString(
+                        'en',
+                        {
+                          weekday: 'long',
+                          timeZone: 'UTC'
+                        }
+                      )}
+                      )
+                    </span>
                   </>
                 }
               />

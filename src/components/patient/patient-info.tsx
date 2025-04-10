@@ -3,17 +3,18 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import PatientPersonalInfo from './info/personal-info';
 import { Separator } from '../ui/separator';
+import { usePatients } from '@/app/context/patients.context';
+import { getPatientRegion } from '@/app/utils/utils';
 
 export default function ProfileScreen() {
+  const { selectedPatient } = usePatients();
+  if (!selectedPatient) return null;
   return (
     <div className="fluid mx-auto">
       <div className="flex flex-col sm:flex-row flex-nowrap gap-y-4 sm:gap-4">
         <div className="relative w-full sm:w-[200px] flex flex-col justify-start items-center space-y-1">
           <Avatar className="aspect-square h-[200px] w-[200px] border-4 border-background mb-4">
-            <AvatarImage
-              src="https://emroneair.netlify.app/img/profile.jpg"
-              alt="User"
-            />
+            <AvatarImage src={selectedPatient.photo} alt="User" />
             <AvatarFallback>BT</AvatarFallback>
           </Avatar>
           <div className="flex flex-nowrap items-center justify-center gap-2">
@@ -37,20 +38,22 @@ export default function ProfileScreen() {
           <div className="flex flex-col justify-center w-full rounded-md border mt-4">
             <div className="flex flex-nowrap flex-row justify-center items-center gap-2 p-2">
               <Phone className="h-4 w-4" />
-              <span className="text-[12px] leading-6">0915 1234-5678</span>
+              <span className="text-[12px] leading-6">
+                {selectedPatient.mobile_number}
+              </span>
             </div>
             <Separator />
             <div className="flex flex-nowrap flex-row justify-center items-center gap-2 p-2">
               <AtSign className="h-4 w-4" />
               <span className="text-[12px] leading-6">
-                john.doe@emailmenow.com
+                {selectedPatient.email}
               </span>
             </div>
             <Separator />
             <div className="flex flex-nowrap flex-row justify-center items-center gap-2 p-2">
               <MapPin className="h-4 w-4" />
               <span className="text-[12px] leading-6">
-                Cebu City, Cebu 6000
+                {getPatientRegion(selectedPatient)}
               </span>
             </div>
           </div>
