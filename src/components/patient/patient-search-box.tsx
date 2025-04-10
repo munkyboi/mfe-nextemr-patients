@@ -16,7 +16,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Check, ChevronDown, User } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import PatientSearchActions from './patient-search-actions';
 import { IPatient, usePatients } from '@/app/context/patients.context';
 import { getPatientFullName, isSearchMatched } from '@/app/utils/utils';
