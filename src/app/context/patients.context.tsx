@@ -42,12 +42,31 @@ export const patient_initalData = {
   nationality: '',
   registered_facility: '',
   emergency_contact: '',
-  blood_type: ''
+  blood_type: '',
+  mobile_number: '',
+  last_visit: '',
+  registered_date: '',
+  photo: '',
+  address_1: '',
+  address_2: '',
+  city: '',
+  state: '',
+  country: '',
+  postal_code: '',
+  vip: false
 };
 export const patients_initialData = [patient_initalData];
+export const patientsContext_initialData = {
+  patients: patients_initialData,
+  saveAllPatients: () => {},
+  selectedPatient: patient_initalData,
+  selectPatient: () => {}
+};
 
 // Create the context
-const PatientsContext = createContext<IPatientsContext>({});
+const PatientsContext = createContext<IPatientsContext>(
+  patientsContext_initialData
+);
 
 // Create a provider component
 export const PatientsProvider = ({ children }: { children: ReactNode }) => {
