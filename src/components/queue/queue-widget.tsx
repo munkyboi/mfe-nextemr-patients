@@ -39,7 +39,7 @@ export default function QueueWidget() {
     return status[rand] as IQueueStatus;
   };
   const generateRandomPatient = useCallback(
-    (arr: IPatient[], count: number, result: IQueueItem[] = []) => {
+    (arr: IPatient[] | undefined, count: number, result: IQueueItem[] = []) => {
       if (result.length === count) {
         return result;
       }
