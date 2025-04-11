@@ -24,6 +24,7 @@ import { FC } from 'react';
 import { getPatientFullName, cn } from '@/lib/utils';
 import { IQueueItem } from './queue-widget';
 import QueueNotificationToggle from './queue-notification-toggle';
+import { usePatients } from '@/context/patients.context';
 
 interface IQueueItemProps {
   ticket: string;
@@ -43,6 +44,7 @@ type IBadgeVariant =
   | undefined;
 
 export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
+  const { selectPatient } = usePatients();
   const status = patient.status || 'N/A';
   let variant: IBadgeVariant;
   if (patient.status === 'in-progress' || patient.status === 'notified')
@@ -54,12 +56,12 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
     variant = 'cancelled';
   if (patient.status === 'billed') variant = 'warning';
 
-  // const shouldShowBadge =
-  //   patient.status === 'cancelled' ||
-  //   patient.status === 're-scheduled' ||
-  //   patient.status === 'in-progress' ||
-  //   patient.status === 'notified';
+  const shouldDisableMenu = patient.status === 'completed';
   const shouldShowBadge = true;
+
+  const handleClick = () => {
+    selectPatient(patient);
+  };
 
   return (
     <div
@@ -77,7 +79,12 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
           <div className="text-md font-bold">{ticket}</div>
         </div>
         <div className="grow overflow-hidden">
-          <h4 className="truncate">{getPatientFullName(patient)}</h4>
+          <h4
+            className="truncate cursor-pointer hover:text-blue-500"
+            onClick={handleClick}
+          >
+            {getPatientFullName(patient)}
+          </h4>
           <p
             className={cn('text-xs text-muted-foreground truncate', {
               'text-gray-300': variant === 'cancelled'
@@ -97,7 +104,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
           )}
           <QueueNotificationToggle />
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger disabled={shouldDisableMenu}>
               <EllipsisVertical />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-[220px]">
