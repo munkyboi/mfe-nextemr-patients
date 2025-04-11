@@ -9,7 +9,7 @@ import FloatingAlert from '@/components/ui/floating-alert';
 import { useEffect, useState } from 'react';
 import { IPatient, usePatients } from '../context/patients.context';
 import { ENDPOINTS } from '@/api/endpoints';
-// import { generatePatientId } from '@/lib/utils';
+import { generatePatientId } from '@/lib/utils';
 import { IQueue, useQueue } from '@/context/queue.context';
 
 export default function Home() {
@@ -24,7 +24,6 @@ export default function Home() {
 
   const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
 
-  // const handleSetPatient = (id: string) => {};
   useEffect(() => {
     setTimeout(() => {
       setIsInQueue(true);
@@ -55,11 +54,12 @@ export default function Home() {
 
   useEffect(() => {
     if (patientData) {
-      // const tempData = patientData.map((item) => ({
-      //   ...item,
-      //   id: generatePatientId()
-      // }));
       saveAllPatients(patientData);
+      const tempData = patientData.map((item) => ({
+        ...item,
+        id: generatePatientId()
+      }));
+      saveAllPatients(tempData);
     }
     if (queueData) {
       addToQueue(queueData);

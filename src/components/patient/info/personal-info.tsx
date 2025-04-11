@@ -69,7 +69,9 @@ export default function PatientPersonalInfo() {
               />
               <LabelValue
                 label={PATIENTS_FORM_LABELS.MEMBER_SINCE}
-                value={selectedPatient.registered_date}
+                value={new Date(
+                  selectedPatient.registered_date
+                ).toLocaleDateString()}
               />
               <LabelValue
                 label={PATIENTS_FORM_LABELS.LAST_VISIT}

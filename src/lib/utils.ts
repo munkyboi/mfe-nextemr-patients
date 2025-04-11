@@ -125,8 +125,28 @@ export const generateSerialCode = (groups = 2, groupLength = 4): string => {
 };
 
 export const generatePatientId = (): string => {
-  const result = `NXEMR-${generateSerialCode(1, 8)}-${generateSerialCode(1, 4)}`;
-  return result;
+  const prefix = 'NXEMR';
+
+  const now = new Date();
+  const year = now.getFullYear().toString().slice(-2);
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const digits = '0123456789';
+
+  const getRandom = (source: string, count: number) =>
+    Array.from({ length: count }, () =>
+      source.charAt(Math.floor(Math.random() * source.length))
+    );
+
+  const letterPart = getRandom(letters, 3);
+  const digitPart = getRandom(digits, 9);
+
+  const mixed = [...letterPart, ...digitPart]
+    .sort(() => Math.random() - 0.5) // shuffle
+    .join('');
+
+  return `${prefix}-${year}${month}-${mixed}`;
 };
 
 export const generateRandomStatus = () => {
