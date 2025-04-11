@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
       {
         // matching all API routes
         source: '/api/:path*',
-        destination: 'http://localhost:4000/:path*'
+        destination: 'http://my.api.mockaroo.com/:path*'
       }
     ];
   }

@@ -28,9 +28,9 @@ export interface IPatient {
 
 interface IPatientsContext {
   patients: IPatient[] | undefined;
-  saveAllPatients: (e: IPatient[]) => void;
+  saveAllPatients: (payload: IPatient[] | undefined) => void;
   selectedPatient: IPatient | undefined;
-  selectPatient: (e: IPatient) => void;
+  selectPatient: (payload: IPatient | undefined) => void;
 }
 export const patient_initalData = {
   id: '',
@@ -74,11 +74,12 @@ export const PatientsProvider = ({ children }: { children: ReactNode }) => {
   const [patients, setPatients] = useState<IPatient[]>();
   const [selectedPatient, setSelectedPatient] = useState<IPatient>();
 
-  const saveAllPatients = (payload: IPatient[]) => {
+  const saveAllPatients = (payload: IPatient[] | undefined) => {
     console.log(payload);
     setPatients(payload);
   };
-  const selectPatient = (patient: IPatient) => setSelectedPatient(patient);
+  const selectPatient = (patient: IPatient | undefined) =>
+    setSelectedPatient(patient);
 
   return (
     <PatientsContext.Provider

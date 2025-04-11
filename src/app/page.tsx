@@ -19,17 +19,26 @@ export default function Home() {
     setIsInQueue(false);
   };
 
+  const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
+
   // const handleSetPatient = (id: string) => {};
   useEffect(() => {
     setTimeout(() => {
       setIsInQueue(true);
     }, 1000);
     (async () => {
-      const response = await fetch(ENDPOINTS.GET_ALL_PATIENTS);
-      const { data } = await response.json();
+      const response = await fetch(ENDPOINTS.GET_ALL_PATIENTS, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-API-Key': apiKey
+        }
+      });
+      const data = await response.json();
       setData(data);
     })();
-  }, []);
+  }, [apiKey]);
 
   useEffect(() => {
     if (data) {

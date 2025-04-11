@@ -43,9 +43,7 @@ function PatientSearchBox() {
     (id: string) => {
       setSelectedPatient(id);
       if (patientsData) {
-        const patient: IPatient | undefined = patientsData.find(
-          (n: IPatient) => n.id === id
-        );
+        const patient = patientsData.find((n: IPatient) => n.id === id);
         selectPatient(patient);
       }
     },
