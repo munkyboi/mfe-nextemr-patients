@@ -16,41 +16,26 @@ export interface IQueueItem extends IPatient {
 export default function QueueWidget() {
   const { patients } = usePatients();
   const { queue } = useQueue();
-  /**
-   * create a temporary queue list
-   */
-  // const queueItems: IQueueItem[] | undefined = useMemo(
-  //   () => generateRandomQueue(patients, Math.floor(Math.random() * 20)),
-  //   [patients]
-  // );
-  // let currentServed: string | null = null;
-  // if (queueItems) {
-  //   if (queueItems.find((item) => item.status === 'in-progress')) {
-  //     currentServed = getPatientFullName(
-  //       queueItems.find((item) => item.status === 'in-progress')
-  //     );
-  //   }
-  // }
-  const queueItems = queue;
+
   let currentServed: string | null = null;
-  if (queueItems) {
-    if (queueItems.find((item) => item.status === 'in-progress')) {
+  if (queue) {
+    if (queue.find((item) => item.status === 'in-progress')) {
       currentServed = getPatientFullName(
-        queueItems.find((item) => item.status === 'in-progress')
+        queue.find((item) => item.status === 'in-progress')
       );
     }
   }
 
-  if (!patients || !queueItems) return null;
+  if (!patients || !queue) return null;
 
-  const activeItems = queueItems.filter(
+  const activeItems = queue.filter(
     (item) =>
       item.status === 'in-progress' ||
       item.status === 'queued' ||
       item.status === 'notified' ||
       item.status === 'billed'
   );
-  const inactiveItems = queueItems.filter(
+  const inactiveItems = queue.filter(
     (item) =>
       item.status === 'cancelled' ||
       item.status === 're-scheduled' ||
@@ -79,8 +64,7 @@ export default function QueueWidget() {
       <div className="px-2 mb-4 w-full">
         <div className="flex flex-row items-center flex-nowrap gap-2">
           <div className="text-[10px]">
-            <span className="font-bold">{queueItems.length}</span> patients
-            in-queue
+            <span className="font-bold">{queue.length}</span> patients in-queue
           </div>
           <div className="grow flex gap-2 justify-end border-r pr-2">
             <Badge variant="default" className="text-[10px] flex gap-2">
@@ -98,7 +82,7 @@ export default function QueueWidget() {
         </div>
         <ScrollArea className="h-[calc(100dvh-230px)] md:h-64 w-full rounded-md border">
           <div className="grid grid-cols-1 gap-0">
-            {queueItems.map((patient) => (
+            {queue.map((patient) => (
               <QueueItem
                 key={`${patient.id}-${patient.first_name}-${patient.last_name}`}
                 ticket={patient.ticket}

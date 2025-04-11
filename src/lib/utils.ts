@@ -1,5 +1,6 @@
 import { IQueueItem } from '@/components/queue/queue-widget';
 import { IPatient } from '@/context/patients.context';
+import { IQueueStatus } from '@/context/queue.context';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
