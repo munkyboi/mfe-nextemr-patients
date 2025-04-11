@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import PatientPersonalInfo from './info/personal-info';
 import { Separator } from '../ui/separator';
 import { usePatients } from '@/app/context/patients.context';
-import { getPatientRegion } from '@/app/utils/utils';
+import { getPatientRegion } from '@/lib/utils';
 
 export default function ProfileScreen() {
   const { selectedPatient } = usePatients();

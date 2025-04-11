@@ -8,6 +8,8 @@ import ProfileScreen from '@/components/patient/patient-info';
 import FloatingAlert from '@/components/ui/floating-alert';
 import { useEffect, useState } from 'react';
 import { IPatient, usePatients } from './context/patients.context';
+import { ENDPOINTS } from './api/endpoints';
+import { generatePatientId } from '@/lib/utils';
 
 export default function Home() {
   const { selectedPatient, saveAllPatients } = usePatients();
@@ -23,14 +25,20 @@ export default function Home() {
       setIsInQueue(true);
     }, 1000);
     (async () => {
-      const response = await fetch('/api/patients');
+      const response = await fetch(ENDPOINTS.GET_ALL_PATIENTS);
       const { data } = await response.json();
       setData(data);
     })();
   }, []);
 
   useEffect(() => {
-    if (data) saveAllPatients(data);
+    if (data) {
+      const tempData = data.map((item) => ({
+        ...item,
+        id: generatePatientId()
+      }));
+      saveAllPatients(tempData);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 

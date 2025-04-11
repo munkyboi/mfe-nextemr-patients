@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/layout/Sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import Header from '@/components/layout/Header';
 import { PatientsProvider } from './context/patients.context';
+import { Suspense } from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,11 +37,13 @@ export default function RootLayout({
       >
         <PatientsProvider>
           <SidebarProvider>
-            <AppSidebar />
-            <main className="w-full relative px-4 pb-4 overflow-x-hidden">
-              <Header />
-              <div className="content w-full pt-16">{children}</div>
-            </main>
+            <Suspense fallback="Loading...">
+              <AppSidebar />
+              <main className="w-full relative px-4 pb-4 overflow-x-hidden">
+                <Header />
+                <div className="content w-full pt-16">{children}</div>
+              </main>
+            </Suspense>
           </SidebarProvider>
         </PatientsProvider>
       </body>

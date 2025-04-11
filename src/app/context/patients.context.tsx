@@ -25,10 +25,11 @@ export interface IPatient {
   postal_code: string;
   vip: boolean;
 }
+
 interface IPatientsContext {
-  patients: IPatient[] | undefined;
+  patients: IPatient[];
   saveAllPatients: (e: IPatient[] | undefined) => void | undefined;
-  selectedPatient: IPatient | undefined;
+  selectedPatient: IPatient;
   selectPatient: (e: IPatient | undefined) => void | undefined;
 }
 export const patient_initalData = {

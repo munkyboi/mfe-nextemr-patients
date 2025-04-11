@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn, getPatientFullName, isSearchMatched } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -19,10 +19,10 @@ import { Check, ChevronDown, User } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import PatientSearchActions from './patient-search-actions';
 import { IPatient, usePatients } from '@/app/context/patients.context';
-import { getPatientFullName, isSearchMatched } from '@/app/utils/utils';
 import { useDebounce } from '@/hooks/use-debounce';
 
 function PatientSearchBox() {
+  const LIST_LIMIT = 50;
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [search, setSearch] = useState('');
@@ -96,7 +96,7 @@ function PatientSearchBox() {
               <CommandGroup>
                 {patientsData
                   .filter((patient) => isSearchMatched(patient, debouncedQuery))
-                  .slice(0, 50) // Limit to 10 results for better performance
+                  .slice(0, LIST_LIMIT) // Limit to 50 results for better performance
                   .map((patient) => (
                     <CommandItem
                       key={patient.id}
@@ -137,20 +137,19 @@ function PatientSearchBox() {
                       />
                     </CommandItem>
                   ))}
-                {debouncedQuery &&
-                  patientsData.filter((patient) =>
-                    isSearchMatched(patient, debouncedQuery)
-                  ).length > 10 && (
-                    <div className="py-2 px-2 text-xs text-muted-foreground text-center">
-                      Showing 10 of{' '}
-                      {
-                        patientsData.filter((patient) =>
-                          isSearchMatched(patient, debouncedQuery)
-                        ).length
-                      }{' '}
-                      results. Refine your search for more specific results.
-                    </div>
-                  )}
+                {patientsData.filter((patient) =>
+                  isSearchMatched(patient, debouncedQuery)
+                ).length > LIST_LIMIT && (
+                  <div className="py-2 px-2 text-xs text-muted-foreground text-center">
+                    Showing {LIST_LIMIT} of{' '}
+                    {
+                      patientsData.filter((patient) =>
+                        isSearchMatched(patient, debouncedQuery)
+                      ).length
+                    }{' '}
+                    results. Refine your search for more specific results.
+                  </div>
+                )}
               </CommandGroup>
             </CommandList>
           </Command>

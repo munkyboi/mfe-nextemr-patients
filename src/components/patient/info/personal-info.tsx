@@ -3,7 +3,7 @@ import {
   getPatientAddress,
   getPatientAge,
   getPatientFullName
-} from '@/app/utils/utils';
+} from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
