@@ -1,6 +1,6 @@
 import { IQueueItem } from '@/components/queue/queue-widget';
 import { IPatient } from '@/context/patients.context';
-import { IQueueStatus } from '@/context/queue.context';
+import { IQueue, IQueueStatus, QueueFilterType } from '@/context/queue.context';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -163,4 +163,27 @@ export const generateRandomQueue = (
     }
     return generateRandomQueue(arr, count, result);
   }
+};
+
+const filterStatusMap = {
+  'in-progress': 'active',
+  queued: 'active',
+  notified: 'active',
+  billed: 'active',
+  cancelled: 'inactive',
+  're-scheduled': 'inactive',
+  completed: 'inactive',
+  paid: 'inactive'
+};
+export const filterQUeue = (
+  queue: IQueue[],
+  filters: QueueFilterType[] | undefined
+) => {
+  let result = queue;
+  if (queue && filters) {
+    result = queue.filter((item) =>
+      filters.includes(filterStatusMap[item.status])
+    );
+  }
+  return result;
 };

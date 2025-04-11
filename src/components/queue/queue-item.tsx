@@ -54,10 +54,17 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
     variant = 'cancelled';
   if (patient.status === 'billed') variant = 'warning';
 
+  // const shouldShowBadge =
+  //   patient.status === 'cancelled' ||
+  //   patient.status === 're-scheduled' ||
+  //   patient.status === 'in-progress' ||
+  //   patient.status === 'notified';
+  const shouldShowBadge = true;
+
   return (
     <div
       className={cn(
-        'relative flex items-center justify-between px-4 py-2 border-b hover:bg-gray-50',
+        'relative flex items-center justify-between px-2 py-2 border-b hover:bg-gray-50',
         {
           'bg-green-100': patient.status === 'in-progress',
           'text-gray-400': variant === 'cancelled',
@@ -65,11 +72,11 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
         }
       )}
     >
-      <div className="w-full flex items-center gap-4">
-        <div className="w-16 flex flex-col gap-2 items-center">
+      <div className="w-full flex items-center gap-2">
+        <div className="w-[60px] flex flex-col gap-2 items-center">
           <div className="text-md font-bold">{ticket}</div>
         </div>
-        <div className="w-full overflow-hidden">
+        <div className="grow overflow-hidden">
           <h4 className="truncate">{getPatientFullName(patient)}</h4>
           <p
             className={cn('text-xs text-muted-foreground truncate', {
@@ -79,72 +86,81 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
             Dr. Sarah Johnson
           </p>
         </div>
-        <Badge variant={variant}>{status.toUpperCase()}</Badge>
-        <QueueNotificationToggle />
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <EllipsisVertical />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[220px]">
-            <DropdownMenuLabel>
-              <div className="flex flex-col items-start gap-2 overflow-hidden">
-                <div className="text-lg font-semibold w-full truncate">{`${ticket} ${getPatientFullName(patient)}`}</div>
-                <Badge variant={variant}>{status.toUpperCase()}</Badge>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {status === 'in-progress' ? (
-              <DropdownMenuItem>
-                <Check />
-                Done serving
-              </DropdownMenuItem>
-            ) : (
+        <div className="flex flex-nowrap items-center gap-0">
+          {shouldShowBadge && (
+            <Badge
+              variant={variant}
+              className="text-[8px] px-2 py-0 h-5 leading-2 mr-2"
+            >
+              {status.toUpperCase()}
+            </Badge>
+          )}
+          <QueueNotificationToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <EllipsisVertical />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[220px]">
+              <DropdownMenuLabel>
+                <div className="flex flex-col items-start gap-2 overflow-hidden">
+                  <div className="text-lg font-semibold w-full truncate">{`${ticket} ${getPatientFullName(patient)}`}</div>
+                  <Badge variant={variant}>{status.toUpperCase()}</Badge>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {status === 'in-progress' ? (
+                <DropdownMenuItem>
+                  <Check />
+                  Done serving
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem disabled={variant === 'cancelled'}>
+                  <Check />
+                  Serve now
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem disabled={variant === 'cancelled'}>
-                <Check />
-                Serve now
+                <Ban />
+                Cancel queue
               </DropdownMenuItem>
-            )}
-            <DropdownMenuItem disabled={variant === 'cancelled'}>
-              <Ban />
-              Cancel queue
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Banknote />
-              Payment
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem disabled={variant === 'cancelled'}>
-              <ArrowUpToLine />
-              Move up
-            </DropdownMenuItem>
-            <DropdownMenuItem disabled={variant === 'cancelled'}>
-              <ArrowDownToLine />
-              Move down
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <HandCoins />
-              Add charge
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <BanknoteArrowUp />
-              Add adjustment
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <UserPen />
-              Edit patient
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Users />
-              Replace patient
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CalendarPlus />
-              Move to appointment
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem>
+                <Banknote />
+                Payment
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem disabled={variant === 'cancelled'}>
+                <ArrowUpToLine />
+                Move up
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled={variant === 'cancelled'}>
+                <ArrowDownToLine />
+                Move down
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <HandCoins />
+                Add charge
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <BanknoteArrowUp />
+                Add adjustment
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <UserPen />
+                Edit patient
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Users />
+                Replace patient
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <CalendarPlus />
+                Move to appointment
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );

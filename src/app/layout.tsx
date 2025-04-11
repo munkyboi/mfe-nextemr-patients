@@ -9,6 +9,7 @@ import Header from '@/components/layout/Header';
 import { PatientsProvider } from '../context/patients.context';
 import { Suspense } from 'react';
 import { QueueProvider } from '../context/queue.context';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -47,13 +48,15 @@ export default function RootLayout({
         <PatientsProvider>
           <QueueProvider>
             <SidebarProvider>
-              <Suspense fallback="Loading...">
-                <AppSidebar />
-                <main className="w-full relative px-4 pb-4 overflow-x-hidden">
-                  <Header />
-                  <div className="content w-full pt-16">{children}</div>
-                </main>
-              </Suspense>
+              <TooltipProvider>
+                <Suspense fallback="Loading...">
+                  <AppSidebar />
+                  <main className="w-full relative px-4 pb-4 overflow-x-hidden">
+                    <Header />
+                    <div className="content w-full pt-16">{children}</div>
+                  </main>
+                </Suspense>
+              </TooltipProvider>
             </SidebarProvider>
           </QueueProvider>
         </PatientsProvider>
