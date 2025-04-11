@@ -69,7 +69,7 @@ export default function QueueWidget() {
       );
     }
   }
-  if (!patients) return null;
+  if (!patients || !queueItems) return null;
   return (
     <div className="py-2">
       <div className="px-2">
