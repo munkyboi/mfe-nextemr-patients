@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import PatientPersonalInfo from './info/personal-info';
 import { Separator } from '../ui/separator';
-import { usePatients } from '@/app/context/patients.context';
+import { usePatients } from '@/context/patients.context';
 import { getPatientRegion } from '@/lib/utils';
 
 export default function ProfileScreen() {

@@ -7,13 +7,16 @@ import { PatientSearchBox } from '@/components/patient/patient-search-box';
 import ProfileScreen from '@/components/patient/patient-info';
 import FloatingAlert from '@/components/ui/floating-alert';
 import { useEffect, useState } from 'react';
-import { IPatient, usePatients } from './context/patients.context';
-import { ENDPOINTS } from './api/endpoints';
-import { generatePatientId } from '@/lib/utils';
+import { IPatient, usePatients } from '../context/patients.context';
+import { ENDPOINTS } from '@/api/endpoints';
+// import { generatePatientId } from '@/lib/utils';
+import { IQueue, useQueue } from '@/context/queue.context';
 
 export default function Home() {
   const { selectedPatient, saveAllPatients } = usePatients();
-  const [data, setData] = useState<IPatient[]>();
+  const { addToQueue } = useQueue();
+  const [patientData, setPatientData] = useState<IPatient[]>();
+  const [queueData, setQueueData] = useState<IQueue[]>();
   const [isInQueue, setIsInQueue] = useState(false);
   const handleServeNow = () => {
     setIsInQueue(false);
@@ -27,7 +30,7 @@ export default function Home() {
       setIsInQueue(true);
     }, 1000);
     (async () => {
-      const response = await fetch(ENDPOINTS.GET_ALL_PATIENTS, {
+      const patients_response = await fetch(ENDPOINTS.GET_ALL_PATIENTS, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -35,21 +38,34 @@ export default function Home() {
           'X-API-Key': apiKey
         }
       });
-      const data = await response.json();
-      setData(data);
+      const patients_json = await patients_response.json();
+      setPatientData(patients_json);
+      const queue_response = await fetch(ENDPOINTS.GET_ALL_QUEUE, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'X-API-Key': apiKey
+        }
+      });
+      const queue_json = await queue_response.json();
+      setQueueData(queue_json);
     })();
   }, [apiKey]);
 
   useEffect(() => {
-    if (data) {
-      const tempData = data.map((item) => ({
-        ...item,
-        id: generatePatientId()
-      }));
-      saveAllPatients(tempData);
+    if (patientData) {
+      // const tempData = patientData.map((item) => ({
+      //   ...item,
+      //   id: generatePatientId()
+      // }));
+      saveAllPatients(patientData);
+    }
+    if (queueData) {
+      addToQueue(queueData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [patientData, queueData]);
 
   return (
     <Card>

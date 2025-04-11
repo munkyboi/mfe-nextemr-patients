@@ -1,4 +1,5 @@
-import { IPatient } from '@/app/context/patients.context';
+import { IQueueItem } from '@/components/queue/queue-widget';
+import { IPatient } from '@/context/patients.context';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -125,4 +126,40 @@ export const generateSerialCode = (groups = 2, groupLength = 4): string => {
 export const generatePatientId = (): string => {
   const result = `NXEMR-${generateSerialCode(1, 8)}-${generateSerialCode(1, 4)}`;
   return result;
+};
+
+export const generateRandomStatus = () => {
+  const status = [
+    'in-progress',
+    'cancelled',
+    'notified',
+    're-scheduled',
+    'billed',
+    'paid',
+    'completed',
+    'queued'
+  ];
+  const rand = Math.floor(Math.random() * 8);
+  return status[rand] as IQueueStatus;
+};
+
+export const generateRandomQueue = (
+  arr: IPatient[] | undefined,
+  count: number,
+  result: IQueueItem[] = []
+): IQueueItem[] | undefined => {
+  if (arr) {
+    if (result.length === count) {
+      return result;
+    }
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    const item = {
+      ...arr[randomIndex],
+      status: generateRandomStatus()
+    };
+    if (!result.includes(item)) {
+      result.push(item);
+    }
+    return generateRandomQueue(arr, count, result);
+  }
 };

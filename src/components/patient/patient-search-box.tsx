@@ -18,7 +18,7 @@ import {
 import { Check, ChevronDown, User } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import PatientSearchActions from './patient-search-actions';
-import { IPatient, usePatients } from '@/app/context/patients.context';
+import { IPatient, usePatients } from '@/context/patients.context';
 import { useDebounce } from '@/hooks/use-debounce';
 
 function PatientSearchBox() {

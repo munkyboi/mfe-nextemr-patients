@@ -26,7 +26,7 @@ import { IQueueItem } from './queue-widget';
 import QueueNotificationToggle from './queue-notification-toggle';
 
 interface IQueueItemProps {
-  index: number;
+  ticket: string;
   patient: IQueueItem;
 }
 
@@ -42,7 +42,8 @@ type IBadgeVariant =
   | null
   | undefined;
 
-export const QueueItem: FC<IQueueItemProps> = ({ index, patient }) => {
+export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
+  const status = patient.status || 'N/A';
   let variant: IBadgeVariant;
   if (patient.status === 'in-progress' || patient.status === 'notified')
     variant = 'positive';
@@ -66,7 +67,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, patient }) => {
     >
       <div className="w-full flex items-center gap-4">
         <div className="w-16 flex flex-col gap-2 items-center">
-          <div className="text-md font-bold">{index}</div>
+          <div className="text-md font-bold">{ticket}</div>
         </div>
         <div className="w-full overflow-hidden">
           <h4 className="truncate">{getPatientFullName(patient)}</h4>
@@ -78,7 +79,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, patient }) => {
             Dr. Sarah Johnson
           </p>
         </div>
-        <Badge variant={variant}>{patient.status.toUpperCase()}</Badge>
+        <Badge variant={variant}>{status.toUpperCase()}</Badge>
         <QueueNotificationToggle />
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -87,12 +88,12 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, patient }) => {
           <DropdownMenuContent className="w-[220px]">
             <DropdownMenuLabel>
               <div className="flex flex-col items-start gap-2 overflow-hidden">
-                <div className="text-lg font-semibold w-full truncate">{`#${index} ${getPatientFullName(patient)}`}</div>
-                <Badge variant={variant}>{patient.status.toUpperCase()}</Badge>
+                <div className="text-lg font-semibold w-full truncate">{`${ticket} ${getPatientFullName(patient)}`}</div>
+                <Badge variant={variant}>{status.toUpperCase()}</Badge>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {patient.status === 'in-progress' ? (
+            {status === 'in-progress' ? (
               <DropdownMenuItem>
                 <Check />
                 Done serving
