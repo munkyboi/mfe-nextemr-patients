@@ -57,7 +57,7 @@ export default function QueueWidget() {
     },
     []
   );
-  const queueItems: IQueueItem[] = useMemo(
+  const queueItems: IQueueItem[] | undefined = useMemo(
     () => generateRandomPatient(patients, 20),
     [generateRandomPatient, patients]
   );
