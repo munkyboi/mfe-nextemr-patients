@@ -1,6 +1,6 @@
 // queue.context.js
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { IPatient, patient_initalData } from './patients.context';
+import { IPatient } from './patients.context';
 
 export type IQueueStatus =
   | 'in-progress'
@@ -27,16 +27,10 @@ interface IQueueContext {
   filters: QueueFilterType[] | undefined;
   saveFilter: (payload: QueueFilterType[] | undefined) => void;
 }
-export const queueItem_initialData = {
-  ...patient_initalData,
-  ticket: 'N/A',
-  status: null
-};
-export const queue_initialData = [queueItem_initialData];
 export const queueContext_initialData = {
-  queue: queue_initialData,
+  queue: undefined,
   addToQueue: () => {},
-  selectedQueue: queueItem_initialData,
+  selectedQueue: undefined,
   selectQueue: () => {},
   filters: ['active', 'inactive'],
   saveFilter: () => {}

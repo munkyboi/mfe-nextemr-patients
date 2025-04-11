@@ -32,35 +32,10 @@ interface IPatientsContext {
   selectedPatient: IPatient | undefined;
   selectPatient: (payload: IPatient | undefined) => void;
 }
-export const patient_initalData = {
-  id: '',
-  first_name: '',
-  last_name: '',
-  email: '',
-  gender: '',
-  date_of_birth: '',
-  marital_status: '',
-  nationality: '',
-  registered_facility: '',
-  emergency_contact: '',
-  blood_type: '',
-  mobile_number: '',
-  last_visit: '',
-  registered_date: '',
-  photo: '',
-  address_1: '',
-  address_2: '',
-  city: '',
-  state: '',
-  country: '',
-  postal_code: '',
-  vip: false
-};
-export const patients_initialData = [patient_initalData];
 export const patientsContext_initialData = {
-  patients: patients_initialData,
+  patients: undefined,
   saveAllPatients: () => {},
-  selectedPatient: patient_initalData,
+  selectedPatient: undefined,
   selectPatient: () => {}
 };
 
