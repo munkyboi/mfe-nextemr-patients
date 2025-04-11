@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-sync-scripts */
 'use client';
 
 import { Geist, Geist_Mono } from 'next/font/google';
@@ -28,10 +29,17 @@ export default function RootLayout({
       lang="en"
       // className="dark"
     >
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-      />
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        />
+        <script
+          crossOrigin="anonymous"
+          src="//unpkg.com/react-scan/dist/auto.global.js"
+        />
+        {/* rest of your scripts go under */}
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-full`}
       >

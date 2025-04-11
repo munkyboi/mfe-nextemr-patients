@@ -54,6 +54,10 @@ function PatientSearchBox() {
 
   if (!patientsData) return null;
 
+  const searchCount = patientsData.filter((patient) =>
+    isSearchMatched(patient, debouncedQuery)
+  ).length;
+
   console.log('----------------- patientsData', patientsData);
   console.log('----------------- selectedPatient', selectedPatient);
   console.log('----------------- selectedPatientData', selectedPatientData);
@@ -82,7 +86,7 @@ function PatientSearchBox() {
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-full min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+          className="max-w-[100dvw] w-full min-w-[var(--radix-popper-anchor-width)] border-input p-0"
           align="end"
         >
           <Command shouldFilter={false}>
@@ -140,14 +144,9 @@ function PatientSearchBox() {
                 {patientsData.filter((patient) =>
                   isSearchMatched(patient, debouncedQuery)
                 ).length > LIST_LIMIT && (
-                  <div className="py-2 px-2 text-xs text-muted-foreground text-center">
-                    Showing {LIST_LIMIT} of{' '}
-                    {
-                      patientsData.filter((patient) =>
-                        isSearchMatched(patient, debouncedQuery)
-                      ).length
-                    }{' '}
-                    results. Refine your search for more specific results.
+                  <div className="max-w-full py-2 px-2 text-xs text-muted-foreground text-center break-all">
+                    Showing {LIST_LIMIT} of {searchCount} results. Refine your
+                    search for more specific results.
                   </div>
                 )}
               </CommandGroup>

@@ -2,9 +2,9 @@ import { Button } from '../ui/button';
 import QueueItem from './queue-item';
 import { ScrollArea } from '../ui/scroll-area';
 import { IPatient, usePatients } from '@/app/context/patients.context';
-import { Eye, EyeOff } from 'lucide-react';
 import { getPatientFullName } from '@/lib/utils';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import QueueWidgetActiveFilter from './queue-widget-active-filter';
 
 export type IQueueStatus =
   | 'in-progress'
@@ -21,8 +21,6 @@ export interface IQueueItem extends IPatient {
 
 export default function QueueWidget() {
   const { patients } = usePatients();
-  const [showActive, setShowActive] = useState(true);
-  const handleShowActive = () => setShowActive((prev) => !prev);
   /**
    * create a temporary queue list
    */
@@ -95,21 +93,10 @@ export default function QueueWidget() {
             <span className="font-bold">12</span> patients in-queue
           </div>
           <div className="text-right">
-            <Button
-              variant="link"
-              className="text-[10px] m-0 has-[>svg]:px-0"
-              onClick={handleShowActive}
-            >
-              {showActive ? (
-                <Eye size={8} className="w-[12px] h-[12px]" />
-              ) : (
-                <EyeOff />
-              )}
-              <span>Show active only</span>
-            </Button>
+            <QueueWidgetActiveFilter />
           </div>
         </div>
-        <ScrollArea className="h-[calc(100dvh-220px)] md:h-64 w-full rounded-md border">
+        <ScrollArea className="h-[calc(100dvh-230px)] md:h-64 w-full rounded-md border">
           <div className="grid grid-cols-1 gap-0">
             {queueItems.map((patient, index) => (
               <QueueItem
