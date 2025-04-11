@@ -40,18 +40,20 @@ export default function QueueWidget() {
   };
   const generateRandomPatient = useCallback(
     (arr: IPatient[] | undefined, count: number, result: IQueueItem[] = []) => {
-      if (result.length === count) {
-        return result;
+      if (arr) {
+        if (result.length === count) {
+          return result;
+        }
+        const randomIndex = Math.floor(Math.random() * arr.length);
+        const item = {
+          ...arr[randomIndex],
+          status: generateRandomStatus()
+        };
+        if (!result.includes(item)) {
+          result.push(item);
+        }
+        return generateRandomPatient(arr, count, result);
       }
-      const randomIndex = Math.floor(Math.random() * arr.length);
-      const item = {
-        ...arr[randomIndex],
-        status: generateRandomStatus()
-      };
-      if (!result.includes(item)) {
-        result.push(item);
-      }
-      return generateRandomPatient(arr, count, result);
     },
     []
   );
