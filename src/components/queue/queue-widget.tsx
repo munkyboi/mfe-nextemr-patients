@@ -50,8 +50,9 @@ export default function QueueWidget() {
         <QueueWidgetActiveFilter />
         <ScrollArea className="h-[calc(100dvh-230px)] md:h-64 w-full rounded-md border">
           <div className="grid grid-cols-1 gap-0">
-            {filteredQueue.map((patient) => (
+            {filteredQueue.map((patient, index) => (
               <QueueItem
+                index={index}
                 key={`${patient.id}-${patient.first_name}-${patient.last_name}`}
                 ticket={patient.ticket}
                 patient={patient}

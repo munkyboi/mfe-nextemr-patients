@@ -20,6 +20,8 @@ export interface IQueue extends IPatient {
 export type QueueFilterType = 'active' | 'inactive' | string;
 
 interface IQueueContext {
+  isOpen: boolean;
+  toggleOpen: (e: boolean | undefined) => void;
   queue: IQueue[] | undefined;
   addToQueue: (payload: IQueue[] | undefined) => void;
   selectedQueue: IQueue | undefined;
@@ -28,6 +30,8 @@ interface IQueueContext {
   saveFilter: (payload: QueueFilterType[] | undefined) => void;
 }
 export const queueContext_initialData = {
+  isOpen: false,
+  toggleOpen: () => {},
   queue: undefined,
   addToQueue: () => {},
   selectedQueue: undefined,
@@ -41,6 +45,7 @@ const QueueContext = createContext<IQueueContext>(queueContext_initialData);
 
 // Create a provider component
 export const QueueProvider = ({ children }: { children: ReactNode }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [queue, setQueue] = useState<IQueue[] | undefined>();
   const [selectedQueue, setSelectedPatient] = useState<IQueue | undefined>();
   const [filters, setFilters] = useState<QueueFilterType[] | undefined>([
@@ -59,9 +64,15 @@ export const QueueProvider = ({ children }: { children: ReactNode }) => {
     setFilters(payload);
   };
 
+  const toggleOpen = (e: boolean | undefined) => {
+    setIsOpen((prev) => (e ? e : !prev));
+  };
+
   return (
     <QueueContext.Provider
       value={{
+        isOpen,
+        toggleOpen,
         queue,
         addToQueue,
         selectedQueue,

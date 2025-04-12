@@ -15,6 +15,7 @@ import {
 } from './collapsible';
 import React, { FC, PropsWithChildren, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { Separator } from './separator';
 
 interface ICollapsibleCardProps extends PropsWithChildren {
   title: ReactNode;
@@ -31,22 +32,27 @@ export const CollapsibleCard: FC<ICollapsibleCardProps> = ({
   const [isOpen, setIsOpen] = React.useState(open);
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card className="flex-1 mb-4 break-after break-inside-avoid-column">
-        <CollapsibleTrigger className="flex flex-row items-center justify-start flex-nowrap">
-          <CardHeader className="flex-grow flex flex-col items-start justify-center">
-            <CardTitle>{title}</CardTitle>
-            {description && <CardDescription>{description}</CardDescription>}
+      <Card className="flex-1 mb-4 break-after break-inside-avoid-column p-0">
+        <CollapsibleTrigger
+          asChild
+          className="cursor-pointer hover:bg-gray-50 py-4 rounded-lg data-[state=open]:rounded-b-none"
+        >
+          <CardHeader className="flex flex-row items-center justify-start flex-nowrap">
+            <div className="flex-grow flex flex-col items-start justify-center">
+              <CardTitle>{title}</CardTitle>
+              {description && <CardDescription>{description}</CardDescription>}
+            </div>
+            <div className="px-0">
+              <ChevronDown
+                className={cn('h-4 w-4 transition', {
+                  'rotate-180': isOpen
+                })}
+              />
+            </div>
           </CardHeader>
-          <div className="px-4">
-            <ChevronDown
-              className={cn('h-4 w-4 transition', {
-                'rotate-180': isOpen
-              })}
-            />
-          </div>
         </CollapsibleTrigger>
-        <CollapsibleContent className="pt-2">
-          <CardContent>{children}</CardContent>
+        <CollapsibleContent>
+          <CardContent className="pt-0 pb-4 space-y-4">{children}</CardContent>
         </CollapsibleContent>
       </Card>
     </Collapsible>

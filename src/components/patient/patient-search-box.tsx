@@ -19,7 +19,7 @@ import { useState } from 'react';
 import PatientSearchActions from './patient-search-actions';
 import { usePatients } from '@/context/patients.context';
 import { useDebounce } from '@/hooks/use-debounce';
-import PatientSearchBoxItem from './info/patient-search-box-item';
+import PatientSearchBoxItem from './patient-search-box-item';
 
 function PatientSearchBox() {
   const LIST_LIMIT = 50;

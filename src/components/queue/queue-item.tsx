@@ -25,8 +25,11 @@ import { getPatientFullName, cn } from '@/lib/utils';
 import { IQueueItem } from './queue-widget';
 import QueueNotificationToggle from './queue-notification-toggle';
 import { usePatients } from '@/context/patients.context';
+import { Button } from '../ui/button';
+import { useQueue } from '@/context/queue.context';
 
 interface IQueueItemProps {
+  index: number;
   ticket: string;
   patient: IQueueItem;
 }
@@ -43,8 +46,9 @@ type IBadgeVariant =
   | null
   | undefined;
 
-export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
+export const QueueItem: FC<IQueueItemProps> = ({ index, ticket, patient }) => {
   const { selectPatient } = usePatients();
+  const { toggleOpen } = useQueue();
   const status = patient.status || 'N/A';
   let variant: IBadgeVariant;
   if (patient.status === 'in-progress' || patient.status === 'notified')
@@ -59,8 +63,9 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
   const shouldDisableMenu = patient.status === 'completed';
   const shouldShowBadge = true;
 
-  const handleClick = () => {
+  const handleViewPatientInfo = () => {
     selectPatient(patient);
+    toggleOpen(false);
   };
 
   return (
@@ -76,12 +81,17 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
     >
       <div className="w-full flex items-center gap-2">
         <div className="w-[60px] flex flex-col gap-2 items-center">
-          <div className="text-md font-bold">{ticket}</div>
+          <div className="flex flex-col gap-0 text-center">
+            <div className="text-md font-bold leading-6">{ticket}</div>
+            <div className="text-[10px] font-medium leading-2 text-gray-400">
+              #{index}
+            </div>
+          </div>
         </div>
         <div className="grow overflow-hidden">
           <h4
             className="truncate cursor-pointer hover:text-blue-500"
-            onClick={handleClick}
+            onClick={handleViewPatientInfo}
           >
             {getPatientFullName(patient)}
           </h4>
@@ -107,11 +117,24 @@ export const QueueItem: FC<IQueueItemProps> = ({ ticket, patient }) => {
             <DropdownMenuTrigger disabled={shouldDisableMenu}>
               <EllipsisVertical />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[220px]">
+            <DropdownMenuContent className="w-[250px]">
               <DropdownMenuLabel>
                 <div className="flex flex-col items-start gap-2 overflow-hidden">
-                  <div className="text-lg font-semibold w-full truncate">{`${ticket} ${getPatientFullName(patient)}`}</div>
-                  <Badge variant={variant}>{status.toUpperCase()}</Badge>
+                  <div className="text-lg font-semibold w-full truncate leading-6">{`${ticket} ${getPatientFullName(patient)}`}</div>
+                  <div className="flex flex-nowrap gap-2 w-full">
+                    <Badge variant={variant} className="text-[10px]">
+                      {status.toUpperCase()}
+                    </Badge>
+                    <div className="border-l pl-2 grow">
+                      <Button
+                        variant="default"
+                        className="cursor-pointer px-4 py-2 text-[10px] leading-4 h-6 w-full"
+                        onClick={handleViewPatientInfo}
+                      >
+                        View patient info
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

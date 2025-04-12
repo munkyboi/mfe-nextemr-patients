@@ -14,18 +14,19 @@ import {
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
+import Link from 'next/link';
 
 // Menu items.
 const items = [
   {
     title: 'Patients',
-    url: '#',
+    url: '/',
     icon: User,
     active: true
   },
   {
     title: 'Inventory',
-    url: '#',
+    url: '/test',
     icon: Container
   },
   {
@@ -63,10 +64,13 @@ export function AppSidebar() {
                       }
                     )}
                   >
-                    <a href={item.url} className={cn('block w-full px-4 py-2')}>
+                    <Link
+                      href={item.url}
+                      className={cn('block w-full px-4 py-2')}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

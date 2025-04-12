@@ -17,9 +17,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
+import { useQueue } from '@/context/queue.context';
 
 export default function Header() {
   const { open } = useSidebar();
+  const { isOpen, toggleOpen } = useQueue();
+  const handleQueueOpen = (e: boolean) => {
+    toggleOpen(e);
+  };
   return (
     <div
       className={cn(
@@ -34,7 +39,7 @@ export default function Header() {
           <div className="flex flex-nowrap justify-start items-center gap-0">
             <SidebarTrigger className="rounded-full" />
             <div className="border-r border-gray-300 ml-2 pr-2">
-              <Popover>
+              <Popover open={isOpen} onOpenChange={handleQueueOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="ghost">
                     <ListIcon size={16} className="mr-2" />
