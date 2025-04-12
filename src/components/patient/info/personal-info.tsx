@@ -12,7 +12,6 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { CollapsibleCard } from '@/components/ui/collapsible-card';
 import LabelValue from '@/components/ui/label-value';
 import { PATIENTS_FORM_LABELS } from '@/constants/patients.constants';
 

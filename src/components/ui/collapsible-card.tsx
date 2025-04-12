@@ -15,7 +15,6 @@ import {
 } from './collapsible';
 import React, { FC, PropsWithChildren, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { Separator } from './separator';
 
 interface ICollapsibleCardProps extends PropsWithChildren {
   title: ReactNode;
