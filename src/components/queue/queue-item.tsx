@@ -47,7 +47,7 @@ type IBadgeVariant =
 
 export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
   const router = useRouter();
-  const { patients, selectPatient } = usePatients();
+  const { patients } = usePatients();
   const { toggleOpen } = useQueue();
   const { ticket_number } = queue;
   const status = queue.status || 'N/A';
@@ -64,7 +64,6 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
   const shouldShowBadge = true;
 
   const handleViewPatientInfo = () => {
-    // selectPatient(patient);
     toggleOpen(false);
     router.push(`/patients/${queue.patient_id}/info`);
   };

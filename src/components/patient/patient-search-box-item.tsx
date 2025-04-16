@@ -16,12 +16,11 @@ export const PatientSearchBoxItem: FC<IPatientSearchBoxItemProps> = ({
   onClose
 }) => {
   const router = useRouter();
-  const { selectedPatient, selectPatient } = usePatients();
+  const { selectedPatient } = usePatients();
 
   const selectedPatientId = selectedPatient?.id;
 
   const handleSelectPatient = (id: string) => {
-    // selectPatient(selectedPatientId === id ? undefined : patient);
     router.push(`/patients/${id}/info`);
   };
 
