@@ -49,7 +49,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
   const router = useRouter();
   const { patients } = usePatients();
   const { toggleOpen } = useQueue();
-  const { ticket_number } = queue;
+  const adjustedIndex = index + 1;
   const status = queue.status || 'N/A';
   let variant: IBadgeVariant;
   if (queue.status === 'in-progress' || queue.status === 'notified')
@@ -74,6 +74,8 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
     (patient) => patient.id === queue.patient_id
   )[0];
 
+  const [ticket] = queue.ticket_number.split('-');
+
   return (
     <div
       className={cn(
@@ -88,9 +90,9 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
       <div className="w-full flex items-center gap-2">
         <div className="w-[60px] flex flex-col gap-2 items-center">
           <div className="flex flex-col gap-0 text-center">
-            <div className="text-md font-bold leading-6">{ticket_number}</div>
+            <div className="text-md font-bold leading-6">{ticket}</div>
             <div className="text-[10px] font-medium leading-2 text-gray-400">
-              #{index}
+              #{adjustedIndex}
             </div>
           </div>
         </div>
@@ -126,7 +128,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
             <DropdownMenuContent className="w-[250px]">
               <DropdownMenuLabel>
                 <div className="flex flex-col items-start gap-2 overflow-hidden">
-                  <div className="text-lg font-semibold w-full truncate leading-6">{`${ticket_number} ${getPatientFullName(patient)}`}</div>
+                  <div className="text-lg font-semibold w-full truncate leading-6">{`${ticket} ${getPatientFullName(patient)}`}</div>
                   <div className="flex flex-nowrap gap-2 w-full">
                     <Badge variant={variant} className="text-[10px]">
                       {status.toUpperCase()}

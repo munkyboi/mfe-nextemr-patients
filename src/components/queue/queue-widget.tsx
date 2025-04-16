@@ -6,8 +6,8 @@ import { filterQUeue, getPatientFullName } from '@/lib/utils';
 import QueueWidgetActiveFilter from './queue-widget-active-filter';
 import { useQueue } from '@/context/queue.context';
 import { useEffect } from 'react';
-import { ENDPOINTS } from '@/data-manager/endpoints';
-import { getCommonHeaders } from '@/data-manager/helpers';
+import { ENDPOINTS } from '@/lib/endpoints';
+import { getCommonHeaders } from '@/lib/helpers';
 
 export default function QueueWidget() {
   const { patients } = usePatients();

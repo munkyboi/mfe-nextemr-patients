@@ -1,7 +1,7 @@
 'use client';
 
-import { ENDPOINTS } from '@/data-manager/endpoints';
-import { getCommonHeaders } from '@/data-manager/helpers';
+import { ENDPOINTS } from '@/lib/endpoints';
+import { getCommonHeaders } from '@/lib/helpers';
 import { usePatients } from '@/context/patients.context';
 import { useEffect, use } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';

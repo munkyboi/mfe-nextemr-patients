@@ -20,8 +20,8 @@ import PatientSearchActions from './patient-search-actions';
 import { usePatients } from '@/context/patients.context';
 import { useDebounce } from '@/hooks/use-debounce';
 import PatientSearchBoxItem from './patient-search-box-item';
-import { ENDPOINTS } from '@/data-manager/endpoints';
-import { getCommonHeaders } from '@/data-manager/helpers';
+import { ENDPOINTS } from '@/lib/endpoints';
+import { getCommonHeaders } from '@/lib/helpers';
 
 function PatientSearchBox() {
   const LIST_LIMIT = 50;
