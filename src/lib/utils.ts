@@ -1,4 +1,3 @@
-import { IQueueItem } from '@/components/queue/queue-widget';
 import { IPatient } from '@/context/patients.context';
 import { IQueue, IQueueStatus, QueueFilterType } from '@/context/queue.context';
 import { clsx, type ClassValue } from 'clsx';
@@ -162,27 +161,6 @@ export const generateRandomStatus = () => {
   ];
   const rand = Math.floor(Math.random() * 8);
   return status[rand] as IQueueStatus;
-};
-
-export const generateRandomQueue = (
-  arr: IPatient[] | undefined,
-  count: number,
-  result: IQueueItem[] = []
-): IQueueItem[] | undefined => {
-  if (arr) {
-    if (result.length === count) {
-      return result;
-    }
-    const randomIndex = Math.floor(Math.random() * arr.length);
-    const item = {
-      ...arr[randomIndex],
-      status: generateRandomStatus()
-    };
-    if (!result.includes(item)) {
-      result.push(item);
-    }
-    return generateRandomQueue(arr, count, result);
-  }
 };
 
 const filterStatusMap = {
