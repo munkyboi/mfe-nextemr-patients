@@ -3,6 +3,7 @@ import { CommandItem } from '@/components/ui/command';
 import { IPatient, usePatients } from '@/context/patients.context';
 import { cn, getPatientFullName } from '@/lib/utils';
 import { User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
 interface IPatientSearchBoxItemProps {
@@ -14,12 +15,14 @@ export const PatientSearchBoxItem: FC<IPatientSearchBoxItemProps> = ({
   patient,
   onClose
 }) => {
+  const router = useRouter();
   const { selectedPatient, selectPatient } = usePatients();
 
   const selectedPatientId = selectedPatient?.id;
 
   const handleSelectPatient = (id: string) => {
-    selectPatient(selectedPatientId === id ? undefined : patient);
+    // selectPatient(selectedPatientId === id ? undefined : patient);
+    router.push(`/patients/${id}/info`);
   };
 
   return (
@@ -40,7 +43,7 @@ export const PatientSearchBoxItem: FC<IPatientSearchBoxItemProps> = ({
           ID: {patient.id}
         </span>
       </div>
-      {patient.vip && (
+      {patient.vip === '1' && (
         <Badge variant="info" className="ml-auto">
           VIP
         </Badge>

@@ -15,11 +15,13 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PatientSearchActions from './patient-search-actions';
 import { usePatients } from '@/context/patients.context';
 import { useDebounce } from '@/hooks/use-debounce';
 import PatientSearchBoxItem from './patient-search-box-item';
+import { ENDPOINTS } from '@/data-manager/endpoints';
+import { getCommonHeaders } from '@/data-manager/helpers';
 
 function PatientSearchBox() {
   const LIST_LIMIT = 50;
@@ -27,12 +29,24 @@ function PatientSearchBox() {
   const [searchQuery, setSearchQuery] = useState('');
   const [search, setSearch] = useState('');
   const debouncedQuery = useDebounce(searchQuery, 500);
-  const { patients, selectedPatient } = usePatients();
+  const { patients, selectedPatient, saveAllPatients } = usePatients();
 
   const handleSearchQuery = (query: string) => {
     setSearch(query);
     if (query.length >= 4 || query === '') setSearchQuery(query);
   };
+
+  useEffect(() => {
+    (async () => {
+      const patients_response = await fetch(`${ENDPOINTS.GET_ALL_PATIENTS}`, {
+        method: 'GET',
+        headers: getCommonHeaders()
+      });
+      const { data: patientInfoData } = await patients_response.json();
+      saveAllPatients(patientInfoData);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!patients) return null;
 

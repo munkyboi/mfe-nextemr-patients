@@ -22,16 +22,15 @@ import {
 import { Badge } from '../ui/badge';
 import { FC } from 'react';
 import { getPatientFullName, cn } from '@/lib/utils';
-import { IQueueItem } from './queue-widget';
 import QueueNotificationToggle from './queue-notification-toggle';
 import { usePatients } from '@/context/patients.context';
 import { Button } from '../ui/button';
 import { useQueue } from '@/context/queue.context';
+import { useRouter } from 'next/navigation';
 
 interface IQueueItemProps {
   index: number;
-  ticket: string;
-  patient: IQueueItem;
+  queue: IQueue;
 }
 
 type IBadgeVariant =
@@ -46,34 +45,42 @@ type IBadgeVariant =
   | null
   | undefined;
 
-export const QueueItem: FC<IQueueItemProps> = ({ index, ticket, patient }) => {
-  const { selectPatient } = usePatients();
+export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
+  const router = useRouter();
+  const { patients, selectPatient } = usePatients();
   const { toggleOpen } = useQueue();
-  const status = patient.status || 'N/A';
+  const { ticket_number } = queue;
+  const status = queue.status || 'N/A';
   let variant: IBadgeVariant;
-  if (patient.status === 'in-progress' || patient.status === 'notified')
+  if (queue.status === 'in-progress' || queue.status === 'notified')
     variant = 'positive';
-  if (patient.status === 'completed') variant = 'default';
-  if (patient.status === 'queued' || patient.status === 'paid')
-    variant = 'info';
-  if (patient.status === 'cancelled' || patient.status === 're-scheduled')
+  if (queue.status === 'completed') variant = 'default';
+  if (queue.status === 'queued' || queue.status === 'paid') variant = 'info';
+  if (queue.status === 'cancelled' || queue.status === 're-scheduled')
     variant = 'cancelled';
-  if (patient.status === 'billed') variant = 'warning';
+  if (queue.status === 'billed') variant = 'warning';
 
-  const shouldDisableMenu = patient.status === 'completed';
+  const shouldDisableMenu = queue.status === 'completed';
   const shouldShowBadge = true;
 
   const handleViewPatientInfo = () => {
-    selectPatient(patient);
+    // selectPatient(patient);
     toggleOpen(false);
+    router.push(`/patients/${queue.patient_id}/info`);
   };
+
+  if (!patients) return null;
+
+  const patient = patients.filter(
+    (patient) => patient.id === queue.patient_id
+  )[0];
 
   return (
     <div
       className={cn(
         'relative flex items-center justify-between px-2 py-2 border-b hover:bg-gray-50',
         {
-          'bg-green-100': patient.status === 'in-progress',
+          'bg-green-100': queue.status === 'in-progress',
           'text-gray-400': variant === 'cancelled',
           'border-b-gray-200': variant === 'cancelled'
         }
@@ -82,7 +89,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, ticket, patient }) => {
       <div className="w-full flex items-center gap-2">
         <div className="w-[60px] flex flex-col gap-2 items-center">
           <div className="flex flex-col gap-0 text-center">
-            <div className="text-md font-bold leading-6">{ticket}</div>
+            <div className="text-md font-bold leading-6">{ticket_number}</div>
             <div className="text-[10px] font-medium leading-2 text-gray-400">
               #{index}
             </div>
@@ -120,7 +127,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, ticket, patient }) => {
             <DropdownMenuContent className="w-[250px]">
               <DropdownMenuLabel>
                 <div className="flex flex-col items-start gap-2 overflow-hidden">
-                  <div className="text-lg font-semibold w-full truncate leading-6">{`${ticket} ${getPatientFullName(patient)}`}</div>
+                  <div className="text-lg font-semibold w-full truncate leading-6">{`${ticket_number} ${getPatientFullName(patient)}`}</div>
                   <div className="flex flex-nowrap gap-2 w-full">
                     <Badge variant={variant} className="text-[10px]">
                       {status.toUpperCase()}

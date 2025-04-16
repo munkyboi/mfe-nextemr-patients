@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -7,7 +8,7 @@ const nextConfig: NextConfig = {
       {
         // matching all API routes
         source: '/api/:path*',
-        destination: 'http://my.api.mockaroo.com/:path*'
+        destination: `${API_URL}/:path*`
       }
     ];
   }

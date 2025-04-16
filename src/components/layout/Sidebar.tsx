@@ -15,28 +15,45 @@ import {
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
 import Link from 'next/link';
+import { useNavigation } from '@/context/navigation.context';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 // Menu items.
-const items = [
+const navigationItems = [
   {
     title: 'Patients',
     url: '/',
-    icon: User,
-    active: true
+    key: ['home', 'patient', 'patients'],
+    icon: User
   },
   {
     title: 'Inventory',
     url: '/test',
+    key: ['test', 'inventory', 'warehouse'],
     icon: Container
   },
   {
     title: 'Point-of-Sale',
-    url: '#',
+    url: '/patients/123/info',
+    key: ['pos', 'cashering'],
     icon: HandCoins
   }
 ];
 
 export function AppSidebar() {
+  const pathname = usePathname();
+  const { currentKey, setCurrentKey } = useNavigation();
+  useEffect(() => {
+    setCurrentKey('home');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    const paths = pathname.slice(1, pathname.length).split('/');
+    const currentPath = paths[0] ? paths[0] : 'home';
+    console.log('=========== pathname', pathname, currentPath);
+    setCurrentKey(currentPath);
+  }, [pathname, setCurrentKey]);
   return (
     <Sidebar variant="sidebar" className={cn('z-600')}>
       <SidebarHeader className="h-16 flex justify-center items-start px-4">
@@ -50,17 +67,17 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
                     className={cn(
                       'text-gray-900 hover:text-gray-900 bg-inherit hover:bg-gray-100 cursor-pointer dark:bg-gray-800 dark:text-white dark:bg-slate-900 dark:hover:bg-slate-800',
                       {
-                        'text-white': item.active,
-                        'bg-blue-500': item.active,
-                        'hover:bg-blue-800': item.active,
-                        'hover:text-white': item.active
+                        'text-white': item.key.includes(currentKey),
+                        'bg-blue-500': item.key.includes(currentKey),
+                        'hover:bg-blue-400': item.key.includes(currentKey),
+                        'hover:text-white': item.key.includes(currentKey)
                       }
                     )}
                   >

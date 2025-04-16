@@ -10,6 +10,7 @@ import { PatientsProvider } from '../context/patients.context';
 import { Suspense } from 'react';
 import { QueueProvider } from '../context/queue.context';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { NavigationProvider } from '@/context/navigation.context';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -48,15 +49,17 @@ export default function RootLayout({
         <PatientsProvider>
           <QueueProvider>
             <SidebarProvider>
-              <TooltipProvider>
-                <Suspense fallback="Loading...">
-                  <AppSidebar />
-                  <main className="w-full relative px-4 pb-4 overflow-x-hidden">
-                    <Header />
-                    <div className="content w-full pt-16">{children}</div>
-                  </main>
-                </Suspense>
-              </TooltipProvider>
+              <NavigationProvider>
+                <TooltipProvider>
+                  <Suspense fallback="Loading...">
+                    <AppSidebar />
+                    <main className="w-full relative px-4 pb-4 overflow-x-hidden">
+                      <Header />
+                      <div className="content w-full pt-16">{children}</div>
+                    </main>
+                  </Suspense>
+                </TooltipProvider>
+              </NavigationProvider>
             </SidebarProvider>
           </QueueProvider>
         </PatientsProvider>

@@ -27,7 +27,7 @@ export default function ProfileScreen() {
               <div className="inline-block text-2xl">
                 {getPatientFullName(selectedPatient)}
               </div>
-              {selectedPatient.vip && (
+              {selectedPatient.vip === '1' && (
                 <Badge className="ml-2 text-[9px] leading-3 bg-blue-500 inline-block">
                   VIP
                 </Badge>

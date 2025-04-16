@@ -1,6 +1,5 @@
 // queue.context.js
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { IPatient } from './patients.context';
 
 export type IQueueStatus =
   | 'in-progress'
@@ -12,8 +11,14 @@ export type IQueueStatus =
   | 'completed'
   | 'queued';
 
-export interface IQueue extends IPatient {
-  ticket: string;
+export interface IQueue {
+  id: string;
+  physician_id: string;
+  patient_id: string;
+  note: string;
+  ticket_number: string;
+  date_created: string;
+  last_updated: string;
   status: IQueueStatus;
 }
 
@@ -29,19 +34,9 @@ interface IQueueContext {
   filters: QueueFilterType[] | undefined;
   saveFilter: (payload: QueueFilterType[] | undefined) => void;
 }
-export const queueContext_initialData = {
-  isOpen: false,
-  toggleOpen: () => {},
-  queue: undefined,
-  addToQueue: () => {},
-  selectedQueue: undefined,
-  selectQueue: () => {},
-  filters: ['active', 'inactive'],
-  saveFilter: () => {}
-};
 
 // Create the context
-const QueueContext = createContext<IQueueContext>(queueContext_initialData);
+const QueueContext = createContext({} as IQueueContext);
 
 // Create a provider component
 export const QueueProvider = ({ children }: { children: ReactNode }) => {

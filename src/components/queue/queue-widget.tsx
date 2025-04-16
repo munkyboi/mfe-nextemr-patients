@@ -1,25 +1,42 @@
 import { Button } from '../ui/button';
 import QueueItem from './queue-item';
 import { ScrollArea } from '../ui/scroll-area';
-import { IPatient, usePatients } from '@/context/patients.context';
+import { usePatients } from '@/context/patients.context';
 import { filterQUeue, getPatientFullName } from '@/lib/utils';
 import QueueWidgetActiveFilter from './queue-widget-active-filter';
-import { IQueueStatus, useQueue } from '@/context/queue.context';
-
-export interface IQueueItem extends IPatient {
-  status: IQueueStatus;
-}
+import { useQueue } from '@/context/queue.context';
+import { useEffect } from 'react';
+import { ENDPOINTS } from '@/data-manager/endpoints';
+import { getCommonHeaders } from '@/data-manager/helpers';
 
 export default function QueueWidget() {
   const { patients } = usePatients();
-  const { queue, filters } = useQueue();
+  const { queue, filters, addToQueue } = useQueue();
+
+  useEffect(() => {
+    (async () => {
+      const queue_response = await fetch(`${ENDPOINTS.GET_ALL_QUEUE}`, {
+        method: 'GET',
+        headers: getCommonHeaders()
+      });
+      const { data: queueData } = await queue_response.json();
+      addToQueue(queueData);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!patients || !queue) return null;
 
   let currentServed: string | null = null;
   if (queue) {
     if (queue.find((item) => item.status === 'in-progress')) {
-      currentServed = getPatientFullName(
-        queue.find((item) => item.status === 'in-progress')
-      );
+      const inProgressId = queue.filter(
+        (item) => item.status === 'in-progress'
+      )[0];
+      const inProgressPatient = patients.filter(
+        (inProgressPatient) => inProgressPatient.id === inProgressId.patient_id
+      )[0];
+      currentServed = getPatientFullName(inProgressPatient);
     }
   }
 
@@ -50,13 +67,8 @@ export default function QueueWidget() {
         <QueueWidgetActiveFilter />
         <ScrollArea className="h-[calc(100dvh-230px)] md:h-64 w-full rounded-md border">
           <div className="grid grid-cols-1 gap-0">
-            {filteredQueue.map((patient, index) => (
-              <QueueItem
-                index={index}
-                key={`${patient.id}-${patient.first_name}-${patient.last_name}`}
-                ticket={patient.ticket}
-                patient={patient}
-              />
+            {filteredQueue.map((queue, index) => (
+              <QueueItem key={`${queue.id}`} index={index} queue={queue} />
             ))}
           </div>
         </ScrollArea>

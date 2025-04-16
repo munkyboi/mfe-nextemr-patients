@@ -23,7 +23,7 @@ export interface IPatient {
   state: string;
   country: string;
   postal_code: string;
-  vip: boolean;
+  vip: string;
 }
 
 interface IPatientsContext {
@@ -31,18 +31,11 @@ interface IPatientsContext {
   saveAllPatients: (payload: IPatient[] | undefined) => void;
   selectedPatient: IPatient | undefined;
   selectPatient: (payload: IPatient | undefined) => void;
+  getPatientInfo: (id: string) => IPatient | false;
 }
-export const patientsContext_initialData = {
-  patients: undefined,
-  saveAllPatients: () => {},
-  selectedPatient: undefined,
-  selectPatient: () => {}
-};
 
 // Create the context
-const PatientsContext = createContext<IPatientsContext>(
-  patientsContext_initialData
-);
+const PatientsContext = createContext({} as IPatientsContext);
 
 // Create a provider component
 export const PatientsProvider = ({ children }: { children: ReactNode }) => {
@@ -56,9 +49,22 @@ export const PatientsProvider = ({ children }: { children: ReactNode }) => {
   const selectPatient = (patient: IPatient | undefined) =>
     setSelectedPatient(patient);
 
+  const getPatientInfo = (id: string) => {
+    if (patients) {
+      return patients.filter((patient) => patient.id === id)[0];
+    }
+    return false;
+  };
+
   return (
     <PatientsContext.Provider
-      value={{ patients, saveAllPatients, selectedPatient, selectPatient }}
+      value={{
+        patients,
+        saveAllPatients,
+        selectedPatient,
+        selectPatient,
+        getPatientInfo
+      }}
     >
       {children}
     </PatientsContext.Provider>

@@ -25,7 +25,7 @@ export default function PatientPersonalInfo() {
           <div>
             <CardTitle className="text-2xl flex items-center">
               {getPatientFullName(selectedPatient)}{' '}
-              {selectedPatient.vip && (
+              {selectedPatient.vip === '1' && (
                 <Badge className="ml-2 text-[10px] bg-blue-500">VIP</Badge>
               )}
             </CardTitle>
