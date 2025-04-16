@@ -25,7 +25,7 @@ import { getPatientFullName, cn } from '@/lib/utils';
 import QueueNotificationToggle from './queue-notification-toggle';
 import { usePatients } from '@/context/patients.context';
 import { Button } from '../ui/button';
-import { useQueue } from '@/context/queue.context';
+import { IQueue, useQueue } from '@/context/queue.context';
 import { useRouter } from 'next/navigation';
 
 interface IQueueItemProps {
