@@ -18,9 +18,14 @@ export const patientsApi = createApi({
   }),
   endpoints: (builder) => ({
     getPatients: builder.query<IResponse<IPatient[]>, void>({
-      query: () => ENDPOINTS.GET_ALL_PATIENTS
+      query: () => ENDPOINTS.GET_ALL_PATIENTS,
+      keepUnusedDataFor: 60
+    }),
+    getPatientById: builder.query<IResponse<IPatient>, string>({
+      query: (userId: string) => `${ENDPOINTS.GET_ALL_PATIENTS}/${userId}`,
+      keepUnusedDataFor: 60
     })
   })
 });
 
-export const { useGetPatientsQuery } = patientsApi;
+export const { useGetPatientsQuery, useGetPatientByIdQuery } = patientsApi;

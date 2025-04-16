@@ -37,9 +37,13 @@ export const CollapsibleCard: FC<ICollapsibleCardProps> = ({
           className="cursor-pointer hover:bg-gray-50 py-4 rounded-lg data-[state=open]:rounded-b-none"
         >
           <CardHeader className="flex flex-row items-center justify-start flex-nowrap">
-            <div className="flex-grow flex flex-col items-start justify-center">
+            <div className="space-y-1 flex-grow flex flex-col items-start justify-center">
               <CardTitle>{title}</CardTitle>
-              {description && <CardDescription>{description}</CardDescription>}
+              {description && (
+                <CardDescription className="text-xs ">
+                  {description}
+                </CardDescription>
+              )}
             </div>
             <div className="px-0">
               <ChevronDown

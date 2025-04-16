@@ -1,10 +1,5 @@
 import { usePatients } from '@/context/patients.context';
-import {
-  getPatientAddress,
-  getPatientAge,
-  getPatientFullName
-} from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
+import { getPatientAddress, getPatientAge } from '@/lib/utils';
 import {
   Card,
   CardContent,
@@ -23,14 +18,11 @@ export default function PatientPersonalInfo() {
       <CardHeader className="pb-2">
         <div className="flex items-center gap-4">
           <div>
-            <CardTitle className="text-2xl flex items-center">
-              {getPatientFullName(selectedPatient)}{' '}
-              {selectedPatient.vip === '1' && (
-                <Badge className="ml-2 text-[10px] bg-blue-500">VIP</Badge>
-              )}
+            <CardTitle className="text-md flex items-center">
+              Personal Information
             </CardTitle>
-            <CardDescription>
-              {PATIENTS_FORM_LABELS.PATIENT_ID}: {selectedPatient.id}
+            <CardDescription className="text-xs">
+              {`${PATIENTS_FORM_LABELS.LAST_UPDATED}: April 8, 2025`}
             </CardDescription>
           </div>
         </div>

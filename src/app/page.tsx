@@ -1,22 +1,21 @@
 'use client';
 
 import { Card, CardHeader } from '@/components/ui/card';
-import { PatientSearchBox } from '@/components/patient/patient-search-box';
+import { PatientSearchBox } from '@/components/patient/searchbox/patient-search-box';
 import { usePatients } from '../context/patients.context';
 import { useGetPatientsQuery } from '@/lib/api/patients.api';
 
 export default function Home() {
   const { saveAllPatients } = usePatients();
+  const { data: patientsData, isLoading, isSuccess } = useGetPatientsQuery();
 
-  const { data, isSuccess } = useGetPatientsQuery();
+  if (isLoading) return 'Loading...';
 
-  if (isSuccess) saveAllPatients(data.data);
+  if (isSuccess) saveAllPatients(patientsData.data);
 
   return (
-    <Card>
-      <CardHeader>
-        <PatientSearchBox />
-      </CardHeader>
+    <Card className="gap-4">
+      <PatientSearchBox />
     </Card>
   );
 }

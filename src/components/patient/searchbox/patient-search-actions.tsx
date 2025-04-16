@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { CalendarPlusIcon } from 'lucide-react';
-import { Badge } from '../ui/badge';
+import { Badge } from '../../ui/badge';
 import { usePatients } from '@/context/patients.context';
 
 export default function PatientSearchActions() {

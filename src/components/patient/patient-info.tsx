@@ -10,10 +10,21 @@ import { PATIENTS_FORM_LABELS } from '@/constants/patients.constants';
 import PatientVitalStatistics from './info/vital-stats';
 import PatientMedicalInformation from './info/medical-information';
 import PatientInsuranceInformation from './info/insurance-information';
+import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
+import PatientInfoSkeleton from '@/app/patients/[id]/info/patient-info.skeleton';
 
-export default function ProfileScreen() {
-  const { selectedPatient } = usePatients();
+interface IProfileInfoProps {
+  id: string;
+}
+export default function ProfileInfo({ id }: IProfileInfoProps) {
+  const { data, isLoading, isSuccess } = useGetPatientByIdQuery(id);
+  const { selectedPatient, selectPatient } = usePatients();
+
+  if (isLoading) return <PatientInfoSkeleton />;
+
+  if (isSuccess) selectPatient(data.data);
   if (!selectedPatient) return null;
+
   return (
     <div className="fluid mx-auto">
       <div className="flex flex-col sm:flex-row flex-nowrap gap-y-4 sm:gap-4">
