@@ -1,6 +1,5 @@
 'use client';
 
-import { usePatients } from '@/context/patients.context';
 import { use } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { PatientSearchBox } from '@/components/patient/searchbox/patient-search-box';
@@ -8,8 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import ProfileInfo from '@/components/patient/patient-info';
 import { PatientQueueAlert } from '@/components/patient/alerts/patient-queue-alert';
-import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
-import PatientInfoSkeleton from './patient-info.skeleton';
 
 type PatientInfoProps = {
   params: Promise<{
