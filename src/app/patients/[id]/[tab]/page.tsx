@@ -3,8 +3,7 @@
 import { use } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { PatientSearchBox } from '@/components/patient/searchbox/patient-search-box';
-import { Tabs, TabsContent } from '@/components/ui/tabs';
-import ProfileInfo from '@/components/patient/patient-info';
+import { Tabs } from '@/components/ui/tabs';
 import { PatientQueueAlert } from '@/components/patient/alerts/patient-queue-alert';
 import { PatientsTabList } from '@/components/patient/tabs/patients-tab-list';
 import { useRouter } from 'next/navigation';
