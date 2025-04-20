@@ -29,7 +29,7 @@ import PatientSearchBoxSkeleton from './patient-search-box.skeleton';
 import { Spinner } from '@/components/ui/spinner';
 
 type PatientSearchBoxProps = {
-  id: string | undefined;
+  id?: string | undefined;
 };
 function PatientSearchBox({ id }: PatientSearchBoxProps) {
   const LIST_LIMIT = 50;
