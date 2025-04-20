@@ -44,7 +44,6 @@ export const PatientsProvider = ({ children }: { children: ReactNode }) => {
   const [selectedPatient, setSelectedPatient] = useState<IPatient>();
 
   const saveAllPatients = (payload: IPatient[] | undefined) => {
-    console.log(payload);
     setPatients(payload);
   };
   const selectPatient = (patient: IPatient | undefined) =>

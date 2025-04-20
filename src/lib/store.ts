@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { patientsApi } from './api/patients.api';
+import { queueApi } from './api/queue.api';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      [patientsApi.reducerPath]: patientsApi.reducer
+      [patientsApi.reducerPath]: patientsApi.reducer,
+      [queueApi.reducerPath]: queueApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(patientsApi.middleware)
+      getDefaultMiddleware().concat(patientsApi.middleware, queueApi.middleware)
   });
 };
 

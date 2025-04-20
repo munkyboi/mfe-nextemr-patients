@@ -5,44 +5,35 @@ import { usePatients } from '@/context/patients.context';
 import { filterQUeue, getPatientFullName } from '@/lib/utils';
 import QueueWidgetActiveFilter from './queue-widget-active-filter';
 import { useQueue } from '@/context/queue.context';
-import { useEffect } from 'react';
-import { ENDPOINTS } from '@/lib/endpoints';
-import { getCommonHeaders } from '@/lib/helpers';
+import { useGetQueueListQuery } from '@/lib/api/queue.api';
+import { QueueWidgetSkeleton } from './queue-widget.skeleton';
 
 export default function QueueWidget() {
   const { patients } = usePatients();
-  const { queue, filters, addToQueue } = useQueue();
+  const { filters, addToQueue } = useQueue();
+  const { data: queueData, isLoading, isSuccess } = useGetQueueListQuery();
 
-  useEffect(() => {
-    (async () => {
-      const queue_response = await fetch(`${ENDPOINTS.GET_ALL_QUEUE}`, {
-        method: 'GET',
-        headers: getCommonHeaders()
-      });
-      const { data: queueData } = await queue_response.json();
-      addToQueue(queueData);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  if (!patients || !queue) return null;
+  if (!patients || isLoading) return <QueueWidgetSkeleton />;
 
   let currentServed: string | null = null;
-  if (queue) {
-    if (queue.find((item) => item.status === 'in-progress')) {
-      const inProgressId = queue.filter(
+  let filteredQueue;
+  if (isSuccess) {
+    const { data } = queueData;
+    addToQueue(data);
+    if (data.find((item) => item.status === 'in-progress')) {
+      const inProgressQueue = data.filter(
         (item) => item.status === 'in-progress'
       )[0];
       const inProgressPatient = patients.filter(
-        (inProgressPatient) => inProgressPatient.id === inProgressId.patient_id
+        (inProgressPatient) =>
+          inProgressPatient.id === inProgressQueue.patient_id
       )[0];
       currentServed = getPatientFullName(inProgressPatient);
     }
+    filteredQueue = filterQUeue(queueData.data, filters);
   }
 
-  if (!patients || !queue) return null;
-
-  const filteredQueue = filterQUeue(queue, filters);
+  if (!filteredQueue) return <QueueWidgetSkeleton />;
 
   return (
     <div className="py-2">

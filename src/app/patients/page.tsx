@@ -1,10 +1,11 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { usePatients } from '../context/patients.context';
+import { Card } from '@/components/ui/card';
+import { PatientSearchBox } from '@/components/patient/searchbox/patient-search-box';
 import { useGetPatientsQuery } from '@/lib/api/patients.api';
+import { usePatients } from '@/context/patients.context';
 
-export default function Home() {
+export default function PatientsHome() {
   const { saveAllPatients, selectPatient } = usePatients();
   const { data: patientsData, isLoading, isSuccess } = useGetPatientsQuery();
 
@@ -17,9 +18,7 @@ export default function Home() {
 
   return (
     <Card className="gap-4">
-      <CardContent>
-        <div>Home...</div>
-      </CardContent>
+      <PatientSearchBox />
     </Card>
   );
 }

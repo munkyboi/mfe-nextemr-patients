@@ -1,7 +1,11 @@
 import FloatingAlert from '@/components/ui/floating-alert';
 import { useEffect, useState } from 'react';
 
-export const PatientQueueAlert = () => {
+interface IPatientQueueAlertProps {
+  id: string;
+}
+
+export const PatientQueueAlert = ({ id }: IPatientQueueAlertProps) => {
   const [isInQueue, setIsInQueue] = useState(false);
 
   const handleServeNow = () => {

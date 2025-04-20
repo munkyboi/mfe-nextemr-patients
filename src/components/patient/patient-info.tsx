@@ -12,18 +12,12 @@ import PatientMedicalInformation from './info/medical-information';
 import PatientInsuranceInformation from './info/insurance-information';
 import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
 import PatientInfoSkeleton from '@/app/patients/[id]/[tab]/patient-info.skeleton';
+import { use } from 'react';
 
-interface IProfileInfoProps {
-  id: string;
-}
-export default function ProfileInfo({ id }: IProfileInfoProps) {
-  const { data, isLoading, isSuccess } = useGetPatientByIdQuery(id);
-  const { selectedPatient, selectPatient } = usePatients();
+export default function ProfileInfo() {
+  const { selectedPatient } = usePatients();
 
-  if (isLoading) return <PatientInfoSkeleton />;
-
-  if (isSuccess) selectPatient(data.data);
-  if (!selectedPatient) return null;
+  if (!selectedPatient) return <PatientInfoSkeleton />;
 
   return (
     <div className="fluid mx-auto">

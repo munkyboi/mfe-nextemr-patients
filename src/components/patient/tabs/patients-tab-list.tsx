@@ -2,6 +2,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
 import { PatientsTabListSkeleton } from './patients-tab-list.skeleton';
+import { TABS_LIST } from '@/constants/patients.constants';
 
 interface IPatientsTabListProps {
   id: string;
@@ -13,19 +14,11 @@ export function PatientsTabList({ id }: IPatientsTabListProps) {
     <TabsList>
       <ScrollArea className="w-full">
         <div className="flex flex-nowrap items-center justify-start">
-          <TabsTrigger value="info">Info</TabsTrigger>
-          <TabsTrigger value="labs">Labs</TabsTrigger>
-          <TabsTrigger value="tests">Tests</TabsTrigger>
-          <TabsTrigger value="vitals">Vitals</TabsTrigger>
-          <TabsTrigger value="meds">Meds</TabsTrigger>
-          <TabsTrigger value="vaccine">Vaccine</TabsTrigger>
-          <TabsTrigger value="notes">Notes</TabsTrigger>
-          <TabsTrigger value="histories">Histories</TabsTrigger>
-          <TabsTrigger value="images">Images</TabsTrigger>
-          <TabsTrigger value="todo">To-do</TabsTrigger>
-          <TabsTrigger value="requests">Requests</TabsTrigger>
-          <TabsTrigger value="forms">Forms</TabsTrigger>
-          <TabsTrigger value="sketch">Sketch</TabsTrigger>
+          {TABS_LIST.map((tab) => (
+            <TabsTrigger key={tab.id} value={tab.id} className="px-4">
+              {tab.label}
+            </TabsTrigger>
+          ))}
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>

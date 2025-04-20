@@ -1,3 +1,5 @@
+import ProfileInfo from '@/components/patient/patient-info';
+
 export const PATIENTS_FORM_LABELS = {
   PATIENT_ID: 'Patient ID',
   DATE_OF_BIRTH: 'Date of birth',
@@ -34,3 +36,41 @@ export const PATIENTS_FORM_LABELS = {
   RELATIONS_TO_GUARANTOR: 'Relations to guarantor',
   NOTE: 'Note'
 };
+
+// export const TABS_LIST = {
+//   INFO: 'info',
+//   LABS: 'labs',
+//   TESTS: 'tests',
+//   VITALS: 'vitals',
+//   MEDS: 'meds',
+//   NOTES: 'notes',
+//   HISTORIES: 'histories',
+//   IMAGES: 'images',
+//   TODO: 'to-do',
+//   REQUESTS: 'requests',
+//   FORMS: 'forms',
+//   SKETCH: 'sketch'
+// };
+
+export const TABS_LIST = [
+  {
+    id: 'info',
+    label: 'Info',
+    render: () => <ProfileInfo />
+  },
+  {
+    id: 'labs',
+    label: 'Labs',
+    render: () => <div>Laboratories content</div>
+  },
+  {
+    id: 'tests',
+    label: 'Tests',
+    render: () => <div>Tests content</div>
+  },
+  {
+    id: 'vitals',
+    label: 'Vital Statistics',
+    render: () => <div>Vital Statistics content</div>
+  }
+];

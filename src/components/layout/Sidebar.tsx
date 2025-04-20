@@ -1,4 +1,4 @@
-import { HandCoins, User, Container, Settings } from 'lucide-react';
+import { HandCoins, User, Container, Settings, Home } from 'lucide-react';
 
 import {
   Sidebar,
@@ -18,28 +18,7 @@ import Link from 'next/link';
 import { useNavigation } from '@/context/navigation.context';
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-
-// Menu items.
-const navigationItems = [
-  {
-    title: 'Patients',
-    url: '/',
-    key: ['home', 'patient', 'patients'],
-    icon: User
-  },
-  {
-    title: 'Inventory',
-    url: '/test',
-    key: ['test', 'inventory', 'warehouse'],
-    icon: Container
-  },
-  {
-    title: 'Point-of-Sale',
-    url: '/patients/123/info',
-    key: ['pos', 'cashering'],
-    icon: HandCoins
-  }
-];
+import { SIDEBAR_NAV_ITEMS } from '@/constants/common.constants';
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -57,9 +36,11 @@ export function AppSidebar() {
   return (
     <Sidebar variant="sidebar" className={cn('z-600')}>
       <SidebarHeader className="h-16 flex justify-center items-start px-4">
-        <h1 className="text-xl font-thin text-gray-900">
-          Next<span className="text-blue-500 font-bold">EMR</span>
-        </h1>
+        <Link href="/">
+          <h1 className="text-xl font-thin text-gray-900">
+            Next<span className="text-blue-500 font-bold">EMR</span>
+          </h1>
+        </Link>
       </SidebarHeader>
       <Separator className={cn('bg-gray-200')} />
       <SidebarContent>
@@ -67,7 +48,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navigationItems.map((item) => (
+              {SIDEBAR_NAV_ITEMS.filter((item) => !item.hidden).map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild

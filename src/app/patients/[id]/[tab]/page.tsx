@@ -8,6 +8,7 @@ import ProfileInfo from '@/components/patient/patient-info';
 import { PatientQueueAlert } from '@/components/patient/alerts/patient-queue-alert';
 import { PatientsTabList } from '@/components/patient/tabs/patients-tab-list';
 import { useRouter } from 'next/navigation';
+import { PatientsTabContent } from '@/components/patient/tabs/patients-tab-content';
 
 type PatientInfoProps = {
   params: Promise<{
@@ -35,19 +36,7 @@ export default function PatientInfo({ params }: PatientInfoProps) {
         <CardContent>
           <Tabs defaultValue="info" value={tab} onValueChange={handleTabChange}>
             <PatientsTabList id={id} />
-            <TabsContent value="info">
-              <ProfileInfo id={id} />
-            </TabsContent>
-            <TabsContent value="labs">
-              <p className="p-4 text-center text-xs text-muted-foreground">
-                Content for Tab 2
-              </p>
-            </TabsContent>
-            <TabsContent value="tests">
-              <p className="p-4 text-center text-xs text-muted-foreground">
-                Content for Tab 3
-              </p>
-            </TabsContent>
+            <PatientsTabContent id={id} />
           </Tabs>
         </CardContent>
       </Card>

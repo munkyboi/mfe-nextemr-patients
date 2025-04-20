@@ -174,7 +174,7 @@ const filterStatusMap = {
   paid: 'inactive'
 };
 export const filterQUeue = (
-  queue: IQueue[],
+  queue: IQueue[] | undefined,
   filters: QueueFilterType[] | undefined
 ) => {
   let result = queue;

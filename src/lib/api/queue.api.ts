@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { ENDPOINTS } from '../endpoints';
 import { IResponse } from './api.types';
-import { IPatient } from '@/context/patients.context';
 import { FABIRCATE_TOKEN } from './api.constants';
+import { IQueue } from '@/context/queue.context';
 
-export const patientsApi = createApi({
-  reducerPath: 'patientsApi',
+export const queueApi = createApi({
+  reducerPath: 'queueApi',
   baseQuery: fetchBaseQuery({
     baseUrl: '',
     prepareHeaders: (headers) => {
@@ -16,19 +16,15 @@ export const patientsApi = createApi({
     }
   }),
   endpoints: (builder) => ({
-    getPatients: builder.query<IResponse<IPatient[]>, void>({
-      query: () => ENDPOINTS.GET_ALL_PATIENTS,
+    getQueueList: builder.query<IResponse<IQueue[]>, void>({
+      query: () => ENDPOINTS.GET_ALL_QUEUE,
       keepUnusedDataFor: 60
     }),
-    getPatientById: builder.query<IResponse<IPatient>, string>({
-      query: (userId: string) => `${ENDPOINTS.GET_ALL_PATIENTS}/${userId}`,
+    getQueueById: builder.query<IResponse<IQueue>, string>({
+      query: (queueId: string) => `${ENDPOINTS.GET_ALL_QUEUE}/${queueId}`,
       keepUnusedDataFor: 60
     })
   })
 });
 
-export const {
-  useGetPatientsQuery,
-  useLazyGetPatientByIdQuery,
-  useGetPatientByIdQuery
-} = patientsApi;
+export const { useGetQueueListQuery, useGetQueueByIdQuery } = queueApi;
