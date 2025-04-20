@@ -48,7 +48,7 @@ export const QueueWidgetActiveFilter = () => {
   return (
     <div className="flex flex-row items-center flex-nowrap gap-2">
       <div className="text-[10px]">
-        <span className="font-bold">{filteredQueue.length}</span> patients
+        <span className="font-bold">{filteredQueue?.length}</span> patients
         in-queue
       </div>
       <div className="grow flex gap-2 justify-end border-r pr-2">
@@ -60,7 +60,7 @@ export const QueueWidgetActiveFilter = () => {
               onClick={handleActiveClick}
             >
               <UserRoundCheck size={10} />
-              <span className="font-bold">{activeItems.length}</span>
+              <span className="font-bold">{activeItems?.length}</span>
             </Badge>
           </TooltipTrigger>
           <TooltipContent>
@@ -75,7 +75,7 @@ export const QueueWidgetActiveFilter = () => {
               onClick={handleInactiveClick}
             >
               <UserMinus size={10} />
-              <span className="font-bold">{inactiveItems.length}</span>
+              <span className="font-bold">{inactiveItems?.length}</span>
             </Badge>
           </TooltipTrigger>
           <TooltipContent>
