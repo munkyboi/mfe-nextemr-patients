@@ -11,7 +11,6 @@ import PatientVitalStatistics from './info/vital-stats';
 import PatientMedicalInformation from './info/medical-information';
 import PatientInsuranceInformation from './info/insurance-information';
 import PatientInfoSkeleton from '@/app/patients/[id]/[tab]/patient-info.skeleton';
-import { use } from 'react';
 
 export default function ProfileInfo() {
   const { selectedPatient } = usePatients();
