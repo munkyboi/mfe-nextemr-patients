@@ -1,5 +1,4 @@
 import { TabsContent } from '@/components/ui/tabs';
-import ProfileInfo from '../patient-info';
 import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
 import { usePatients } from '@/context/patients.context';
 import { TABS_LIST } from '@/constants/patients.constants';
@@ -23,15 +22,3 @@ export function PatientsTabContent({ id }: IPatientsTabContentProps) {
     </>
   );
 }
-
-// export function PatientsTabContent({ id }: IPatientsTabContentProps) {
-//   return (
-//     <>
-//       {TABS_LIST.map((tab) => (
-//         <TabsContent key={tab.id} value={tab.id}>
-//           {tab.render(id)}
-//         </TabsContent>
-//       ))}
-//     </>
-//   );
-// }
