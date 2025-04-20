@@ -1,24 +1,26 @@
 import FloatingAlert from '@/components/ui/floating-alert';
+import { usePatients } from '@/context/patients.context';
+import { useQueue } from '@/context/queue.context';
+import { getPatientFullName } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
-interface IPatientQueueAlertProps {
-  id: string;
-}
-
-export const PatientQueueAlert = ({ id }: IPatientQueueAlertProps) => {
+export const PatientQueueAlert = () => {
+  const { selectedPatient } = usePatients();
+  const { queue } = useQueue();
   const [isInQueue, setIsInQueue] = useState(false);
+  const [queueIndex, setQueueIndex] = useState<number | undefined>();
 
   const handleServeNow = () => {
     setIsInQueue(false);
   };
 
   useEffect(() => {
-    (async () => {
-      setTimeout(() => {
-        setIsInQueue(true);
-      }, 1000);
-    })();
-  }, []);
+    if (queue && selectedPatient) {
+      const qIndex = queue.map((q) => q.patient_id).indexOf(selectedPatient.id);
+      setQueueIndex(+qIndex + 1);
+      setIsInQueue(qIndex > -1);
+    }
+  }, [queue, selectedPatient]);
 
   return (
     <FloatingAlert
@@ -32,8 +34,10 @@ export const PatientQueueAlert = ({ id }: IPatientQueueAlertProps) => {
       description={
         <>
           <span>
-            <span className="font-bold">Tambling, Ben</span> is currently in
-            queue #12
+            <span className="font-bold">
+              {getPatientFullName(selectedPatient)}
+            </span>{' '}
+            is currently in queue #{queueIndex}
           </span>
         </>
       }
