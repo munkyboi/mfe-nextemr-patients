@@ -39,7 +39,7 @@ export const PatientSearchBoxItem: FC<IPatientSearchBoxItemProps> = ({
       <div className="flex flex-col">
         <span>{getPatientFullName(patient)}</span>
         <span className={cn('text-xs text-muted-foreground')}>
-          ID: {patient.id}
+          ID: {patient.display_id}
         </span>
       </div>
       {patient.vip === '1' && (

@@ -11,7 +11,7 @@ import PatientVitalStatistics from './info/vital-stats';
 import PatientMedicalInformation from './info/medical-information';
 import PatientInsuranceInformation from './info/insurance-information';
 import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
-import PatientInfoSkeleton from '@/app/patients/[id]/info/patient-info.skeleton';
+import PatientInfoSkeleton from '@/app/patients/[id]/[tab]/patient-info.skeleton';
 
 interface IProfileInfoProps {
   id: string;
@@ -45,7 +45,7 @@ export default function ProfileInfo({ id }: IProfileInfoProps) {
               )}
             </div>
             <div className="text-xs font-normal text-gray-400 text-center">
-              {PATIENTS_FORM_LABELS.PATIENT_ID}: {selectedPatient.id}
+              {PATIENTS_FORM_LABELS.PATIENT_ID}: {selectedPatient.display_id}
             </div>
           </div>
           <div className="flex flex-nowrap items-center justify-center gap-2">

@@ -24,6 +24,7 @@ export interface IPatient {
   country: string;
   postal_code: string;
   vip: string;
+  display_id: string;
 }
 
 interface IPatientsContext {

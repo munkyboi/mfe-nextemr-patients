@@ -21,10 +21,17 @@ import { usePatients } from '@/context/patients.context';
 import { useDebounce } from '@/hooks/use-debounce';
 import PatientSearchBoxItem from './patient-search-box-item';
 import { CardHeader } from '../../ui/card';
-import { useGetPatientsQuery } from '@/lib/api/patients.api';
+import {
+  useGetPatientByIdQuery,
+  useGetPatientsQuery
+} from '@/lib/api/patients.api';
 import PatientSearchBoxSkeleton from './patient-search-box.skeleton';
+import { Spinner } from '@/components/ui/spinner';
 
-function PatientSearchBox() {
+type PatientSearchBoxProps = {
+  id?: string;
+};
+function PatientSearchBox({ id }: PatientSearchBoxProps) {
   const LIST_LIMIT = 50;
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,6 +39,7 @@ function PatientSearchBox() {
   const debouncedQuery = useDebounce(searchQuery, 500);
   const { patients, selectedPatient, saveAllPatients } = usePatients();
   const { data: patientsData, isLoading, isSuccess } = useGetPatientsQuery();
+  const { isLoading: patientIsLoading } = useGetPatientByIdQuery(id) || null;
 
   const handleSearchQuery = (query: string) => {
     setSearch(query);
@@ -52,7 +60,7 @@ function PatientSearchBox() {
     <CardHeader className="gap-0">
       <div className="min-w-[300px] flex flex-nowrap flex-row">
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
+          <PopoverTrigger asChild disabled={patientIsLoading}>
             <Button
               variant="outline"
               role="combobox"
@@ -62,12 +70,16 @@ function PatientSearchBox() {
               {selectedPatient
                 ? getPatientFullName(selectedPatient)
                 : 'Search patients...'}
-              <ChevronDown
-                size={16}
-                strokeWidth={2}
-                className="shrink-0 text-muted-foreground/80"
-                aria-hidden="true"
-              />
+              {patientIsLoading ? (
+                <Spinner size="small" />
+              ) : (
+                <ChevronDown
+                  size={16}
+                  strokeWidth={2}
+                  className="shrink-0 text-muted-foreground/80"
+                  aria-hidden="true"
+                />
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent
@@ -108,7 +120,7 @@ function PatientSearchBox() {
             </Command>
           </PopoverContent>
         </Popover>
-        <PatientSearchActions />
+        <PatientSearchActions disabled={patientIsLoading} />
       </div>
     </CardHeader>
   );

@@ -13,15 +13,21 @@ import { CalendarPlusIcon } from 'lucide-react';
 import { Badge } from '../../ui/badge';
 import { usePatients } from '@/context/patients.context';
 
-export default function PatientSearchActions() {
+interface IPatientSearchActionsProps {
+  disabled?: boolean;
+}
+
+export default function PatientSearchActions({
+  disabled
+}: IPatientSearchActionsProps) {
   const { selectedPatient } = usePatients();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild disabled={disabled}>
         <Button
           variant="secondary"
           className="rounded-tl-none rounded-bl-none text-white bg-blue-500 hover:bg-blue-600 min-w-auto md:min-w-[200px]"
-          disabled={!selectedPatient}
+          disabled={disabled || !selectedPatient}
         >
           Action
         </Button>

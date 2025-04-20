@@ -6,12 +6,15 @@ import { usePatients } from '../context/patients.context';
 import { useGetPatientsQuery } from '@/lib/api/patients.api';
 
 export default function Home() {
-  const { saveAllPatients } = usePatients();
+  const { saveAllPatients, selectPatient } = usePatients();
   const { data: patientsData, isLoading, isSuccess } = useGetPatientsQuery();
 
   if (isLoading) return 'Loading...';
 
-  if (isSuccess) saveAllPatients(patientsData.data);
+  if (isSuccess) {
+    selectPatient(undefined);
+    saveAllPatients(patientsData.data);
+  }
 
   return (
     <Card className="gap-4">
