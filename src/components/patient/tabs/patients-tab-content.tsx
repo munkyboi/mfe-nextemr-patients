@@ -16,7 +16,7 @@ export function PatientsTabContent({ id }: IPatientsTabContentProps) {
     <>
       {TABS_LIST.map((tab) => (
         <TabsContent key={tab.id} value={tab.id}>
-          {tab.render(id)}
+          {tab.render()}
         </TabsContent>
       ))}
     </>
