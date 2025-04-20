@@ -15,21 +15,21 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PatientSearchActions from './patient-search-actions';
 import { usePatients } from '@/context/patients.context';
 import { useDebounce } from '@/hooks/use-debounce';
 import PatientSearchBoxItem from './patient-search-box-item';
 import { CardHeader } from '../../ui/card';
 import {
-  useGetPatientByIdQuery,
+  useLazyGetPatientByIdQuery,
   useGetPatientsQuery
 } from '@/lib/api/patients.api';
 import PatientSearchBoxSkeleton from './patient-search-box.skeleton';
 import { Spinner } from '@/components/ui/spinner';
 
 type PatientSearchBoxProps = {
-  id?: string;
+  id: string | undefined;
 };
 function PatientSearchBox({ id }: PatientSearchBoxProps) {
   const LIST_LIMIT = 50;
@@ -39,7 +39,13 @@ function PatientSearchBox({ id }: PatientSearchBoxProps) {
   const debouncedQuery = useDebounce(searchQuery, 500);
   const { patients, selectedPatient, saveAllPatients } = usePatients();
   const { data: patientsData, isLoading, isSuccess } = useGetPatientsQuery();
-  const { isLoading: patientIsLoading } = useGetPatientByIdQuery(id) || null;
+  const [triggerPatientQuery, { isLoading: patientIsLoading }] =
+    useLazyGetPatientByIdQuery();
+
+  useEffect(() => {
+    if (id) triggerPatientQuery(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const handleSearchQuery = (query: string) => {
     setSearch(query);
