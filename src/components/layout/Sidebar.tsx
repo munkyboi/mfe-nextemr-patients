@@ -1,4 +1,4 @@
-import { HandCoins, User, Container, Settings, Home } from 'lucide-react';
+import { Settings } from 'lucide-react';
 
 import {
   Sidebar,
