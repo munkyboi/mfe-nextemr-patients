@@ -10,7 +10,6 @@ import { PATIENTS_FORM_LABELS } from '@/constants/patients.constants';
 import PatientVitalStatistics from './info/vital-stats';
 import PatientMedicalInformation from './info/medical-information';
 import PatientInsuranceInformation from './info/insurance-information';
-import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
 import PatientInfoSkeleton from '@/app/patients/[id]/[tab]/patient-info.skeleton';
 import { use } from 'react';
 
