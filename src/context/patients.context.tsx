@@ -33,6 +33,7 @@ interface IPatientsContext {
   selectedPatient: IPatient | undefined;
   selectPatient: (payload: IPatient | undefined) => void;
   getPatientInfo: (id: string) => IPatient | false;
+  clearSelectedPatient: () => void;
 }
 
 // Create the context
@@ -46,6 +47,7 @@ export const PatientsProvider = ({ children }: { children: ReactNode }) => {
   const saveAllPatients = (payload: IPatient[] | undefined) => {
     setPatients(payload);
   };
+
   const selectPatient = (patient: IPatient | undefined) =>
     setSelectedPatient(patient);
 
@@ -56,6 +58,8 @@ export const PatientsProvider = ({ children }: { children: ReactNode }) => {
     return false;
   };
 
+  const clearSelectedPatient = () => setSelectedPatient(undefined);
+
   return (
     <PatientsContext.Provider
       value={{
@@ -63,7 +67,8 @@ export const PatientsProvider = ({ children }: { children: ReactNode }) => {
         saveAllPatients,
         selectedPatient,
         selectPatient,
-        getPatientInfo
+        getPatientInfo,
+        clearSelectedPatient
       }}
     >
       {children}

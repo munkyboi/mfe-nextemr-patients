@@ -5,28 +5,29 @@ import { getPatientFullName } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
 export const PatientQueueAlert = () => {
-  const { selectedPatient } = usePatients();
   const { queue } = useQueue();
-  const [isInQueue, setIsInQueue] = useState(false);
-  const [queueIndex, setQueueIndex] = useState<number | undefined>();
+  const { selectedPatient } = usePatients();
+  const [open, setOpen] = useState(false);
+  const [qIndex, setQIndex] = useState(-1);
 
   const handleServeNow = () => {
-    setIsInQueue(false);
+    setOpen(false);
   };
 
   useEffect(() => {
     if (queue && selectedPatient) {
-      const qIndex = queue.map((q) => q.patient_id).indexOf(selectedPatient.id);
-      setQueueIndex(+qIndex + 1);
-      setIsInQueue(qIndex > -1);
+      const q = queue?.map((i) => i.patient_id).indexOf(selectedPatient.id);
+      setQIndex(q);
+      setOpen(q > -1);
     }
+    if (!selectedPatient) setOpen(false);
   }, [queue, selectedPatient]);
 
   return (
     <FloatingAlert
       variant="positive"
-      open={isInQueue}
-      onOpenChange={setIsInQueue}
+      open={open}
+      onOpenChange={setOpen}
       actionButton={{
         label: 'Serve now',
         onClick: handleServeNow
@@ -37,7 +38,7 @@ export const PatientQueueAlert = () => {
             <span className="font-bold">
               {getPatientFullName(selectedPatient)}
             </span>{' '}
-            is currently in queue #{queueIndex}
+            is currently in queue #{+qIndex + 1}
           </span>
         </>
       }

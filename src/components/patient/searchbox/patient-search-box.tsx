@@ -73,9 +73,11 @@ function PatientSearchBox({ id }: PatientSearchBoxProps) {
               aria-expanded={open}
               className="flex-grow justify-between bg-background px-3 font-normal outline-offset-0 hover:bg-background focus-visible:border-ring focus-visible:outline-[3px] focus-visible:outline-ring/20 rounded-tr-none rounded-br-none m-0"
             >
-              {selectedPatient
-                ? getPatientFullName(selectedPatient)
-                : 'Search patients...'}
+              {patientIsLoading
+                ? 'Loading patient data...'
+                : selectedPatient
+                  ? getPatientFullName(selectedPatient)
+                  : 'Search patients...'}
               {patientIsLoading ? (
                 <Spinner size="small" />
               ) : (

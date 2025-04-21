@@ -2,18 +2,11 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { usePatients } from '../context/patients.context';
-import { useGetPatientsQuery } from '@/lib/api/patients.api';
 
 export default function Home() {
-  const { saveAllPatients, selectPatient } = usePatients();
-  const { data: patientsData, isLoading, isSuccess } = useGetPatientsQuery();
+  const { clearSelectedPatient } = usePatients();
 
-  if (isLoading) return 'Loading...';
-
-  if (isSuccess) {
-    selectPatient(undefined);
-    saveAllPatients(patientsData.data);
-  }
+  clearSelectedPatient();
 
   return (
     <Card className="gap-4">

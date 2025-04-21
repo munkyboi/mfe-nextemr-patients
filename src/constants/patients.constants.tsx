@@ -56,7 +56,7 @@ export const TABS_LIST = [
   {
     id: 'info',
     label: 'Info',
-    render: () => <ProfileInfo />
+    render: (id: string) => <ProfileInfo id={id} />
   },
   {
     id: 'labs',

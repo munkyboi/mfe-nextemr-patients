@@ -5,8 +5,15 @@ import { useQueue } from '@/context/queue.context';
 import { Badge } from '../ui/badge';
 import { filterQUeue } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Spinner } from '../ui/spinner';
 
-export const QueueWidgetActiveFilter = () => {
+interface IQueueWidgetActiveFilterProps {
+  isFetching?: boolean;
+}
+
+export const QueueWidgetActiveFilter = ({
+  isFetching
+}: IQueueWidgetActiveFilterProps) => {
   const { queue, filters, saveFilter } = useQueue();
   const [showAll, setShowAll] = useState(true);
 
@@ -52,6 +59,7 @@ export const QueueWidgetActiveFilter = () => {
         in-queue
       </div>
       <div className="grow flex gap-2 justify-end border-r pr-2">
+        {isFetching && <Spinner className="w-5 h-5" />}
         <Tooltip>
           <TooltipTrigger asChild>
             <Badge

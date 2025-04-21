@@ -6,13 +6,14 @@ import { useGetPatientsQuery } from '@/lib/api/patients.api';
 import { usePatients } from '@/context/patients.context';
 
 export default function PatientsHome() {
-  const { saveAllPatients, selectPatient } = usePatients();
+  const { saveAllPatients, clearSelectedPatient } = usePatients();
   const { data: patientsData, isLoading, isSuccess } = useGetPatientsQuery();
+
+  clearSelectedPatient();
 
   if (isLoading) return 'Loading...';
 
   if (isSuccess) {
-    selectPatient(undefined);
     saveAllPatients(patientsData.data);
   }
 

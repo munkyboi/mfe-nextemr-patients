@@ -12,6 +12,7 @@ import { QueueProvider } from '../context/queue.context';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { NavigationProvider } from '@/context/navigation.context';
 import StoreProvider from './storeProvider';
+import { InitializeWrapper } from './wrapper';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -54,11 +55,13 @@ export default function RootLayout({
                 <NavigationProvider>
                   <TooltipProvider>
                     <Suspense fallback="Loading...">
-                      <AppSidebar />
-                      <main className="w-full relative px-4 pb-4 overflow-x-hidden">
-                        <Header />
-                        <div className="content w-full pt-16">{children}</div>
-                      </main>
+                      <InitializeWrapper>
+                        <AppSidebar />
+                        <main className="w-full relative px-4 pb-4 overflow-x-hidden">
+                          <Header />
+                          <div className="content w-full pt-16">{children}</div>
+                        </main>
+                      </InitializeWrapper>
                     </Suspense>
                   </TooltipProvider>
                 </NavigationProvider>

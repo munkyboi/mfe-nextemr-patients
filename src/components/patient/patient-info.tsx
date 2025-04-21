@@ -11,21 +11,32 @@ import PatientVitalStatistics from './info/vital-stats';
 import PatientMedicalInformation from './info/medical-information';
 import PatientInsuranceInformation from './info/insurance-information';
 import PatientInfoSkeleton from '@/app/patients/[id]/[tab]/patient-info.skeleton';
+import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
+import { Spinner } from '../ui/spinner';
 
-export default function ProfileInfo() {
+interface IProfileInfoProps {
+  id: string;
+}
+
+export default function ProfileInfo({ id }: IProfileInfoProps) {
   const { selectedPatient } = usePatients();
 
-  if (!selectedPatient) return <PatientInfoSkeleton />;
+  const { isFetching, isLoading } = useGetPatientByIdQuery(id);
+
+  if (!selectedPatient || isLoading) return <PatientInfoSkeleton />;
 
   return (
     <div className="fluid mx-auto">
       <div className="flex flex-col sm:flex-row flex-nowrap gap-y-4 sm:gap-4">
-        <div className="relative w-full sm:w-[200px] flex flex-col justify-start items-center space-y-4">
-          <Avatar className="aspect-square h-[200px] w-[200px] border-4 border-background mb-4">
+        <div className="relative w-full sm:w-[200px] flex flex-col justify-start items-center">
+          <Avatar className="aspect-square h-[200px] w-[200px] border-4 border-background mb-4 z-2 relative bg-gray-300">
             <AvatarImage src={selectedPatient.photo} alt="User" />
             <AvatarFallback>BT</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col items-center">
+          {isFetching && (
+            <Spinner className="absolute m-0 mb-0 top-[-23px] left-[50%] ml-[-123px] h-[246px] w-[246px] z-1" />
+          )}
+          <div className="flex flex-col items-center mb-4">
             <div className="font-medium text-center">
               <div className="inline-block text-2xl">
                 {getPatientFullName(selectedPatient)}
@@ -40,7 +51,7 @@ export default function ProfileInfo() {
               {PATIENTS_FORM_LABELS.PATIENT_ID}: {selectedPatient.display_id}
             </div>
           </div>
-          <div className="flex flex-nowrap items-center justify-center gap-2">
+          <div className="flex flex-nowrap items-center justify-center gap-2 mb-4">
             <Button
               variant="outline"
               size="sm"

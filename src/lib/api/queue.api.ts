@@ -18,13 +18,17 @@ export const queueApi = createApi({
   endpoints: (builder) => ({
     getQueueList: builder.query<IResponse<IQueue[]>, void>({
       query: () => ENDPOINTS.GET_ALL_QUEUE,
-      keepUnusedDataFor: 60
+      keepUnusedDataFor: 5
     }),
     getQueueById: builder.query<IResponse<IQueue>, string>({
       query: (queueId: string) => `${ENDPOINTS.GET_ALL_QUEUE}/${queueId}`,
-      keepUnusedDataFor: 60
+      keepUnusedDataFor: 5
     })
   })
 });
 
-export const { useGetQueueListQuery, useGetQueueByIdQuery } = queueApi;
+export const {
+  useGetQueueListQuery,
+  useGetQueueByIdQuery,
+  useLazyGetQueueListQuery
+} = queueApi;

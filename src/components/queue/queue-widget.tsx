@@ -5,13 +5,18 @@ import { usePatients } from '@/context/patients.context';
 import { filterQUeue, getPatientFullName } from '@/lib/utils';
 import QueueWidgetActiveFilter from './queue-widget-active-filter';
 import { useQueue } from '@/context/queue.context';
-import { useGetQueueListQuery } from '@/lib/api/queue.api';
+import { useLazyGetQueueListQuery } from '@/lib/api/queue.api';
 import { QueueWidgetSkeleton } from './queue-widget.skeleton';
 
 export default function QueueWidget() {
   const { patients } = usePatients();
   const { filters, addToQueue } = useQueue();
-  const { data: queueData, isLoading, isSuccess } = useGetQueueListQuery();
+  const [
+    triggerFetchQueryList,
+    { data: queueData, isFetching, isLoading, isSuccess, isUninitialized }
+  ] = useLazyGetQueueListQuery();
+
+  if (isUninitialized) triggerFetchQueryList();
 
   if (!patients || isLoading) return <QueueWidgetSkeleton />;
 
@@ -55,7 +60,7 @@ export default function QueueWidget() {
         </div>
       </div>
       <div className="px-2 mb-4 w-full">
-        <QueueWidgetActiveFilter />
+        <QueueWidgetActiveFilter isFetching={isFetching} />
         <ScrollArea className="h-[calc(100dvh-230px)] md:h-64 w-full rounded-md border">
           <div className="grid grid-cols-1 gap-0">
             {filteredQueue.map((queue, index) => (
