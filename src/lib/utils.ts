@@ -3,6 +3,7 @@ import { IPhysician } from '@/context/physicians.context';
 import { IQueue, IQueueStatus, QueueFilterType } from '@/context/queue.context';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { IValidateStatusBody } from './api/api.constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
