@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { ENDPOINTS } from '../endpoints';
 import { IResponse } from './api.types';
-import { IPatient } from '@/context/patients.context';
 import { FABIRCATE_TOKEN } from './api.constants';
+import { IPhysician } from '@/context/physicians.context';
 import { validateStatus } from '../utils';
 
-export const patientsApi = createApi({
-  reducerPath: 'patientsApi',
+export const physiciansApi = createApi({
+  reducerPath: 'physiciansApi',
   baseQuery: fetchBaseQuery({
     baseUrl: '',
     prepareHeaders: (headers) => {
@@ -17,17 +17,17 @@ export const patientsApi = createApi({
     }
   }),
   endpoints: (builder) => ({
-    getPatients: builder.query<IResponse<IPatient[]>, void>({
+    getPhysiciansList: builder.query<IResponse<IPhysician[]>, void>({
       query: () => ({
-        url: ENDPOINTS.GET_ALL_PATIENTS,
+        url: ENDPOINTS.GET_ALL_PHYSICIANS,
         method: 'GET',
         validateStatus: validateStatus
       }),
       keepUnusedDataFor: 60
     }),
-    getPatientById: builder.query<IResponse<IPatient>, string>({
-      query: (userId: string) => ({
-        url: `${ENDPOINTS.GET_ALL_PATIENTS}/${userId}`,
+    getPhysicianById: builder.query<IResponse<IPhysician>, string>({
+      query: (id: string) => ({
+        url: `${ENDPOINTS.GET_ALL_PHYSICIANS}/${id}`,
         method: 'GET',
         validateStatus: validateStatus
       }),
@@ -36,8 +36,5 @@ export const patientsApi = createApi({
   })
 });
 
-export const {
-  useGetPatientsQuery,
-  useLazyGetPatientByIdQuery,
-  useGetPatientByIdQuery
-} = patientsApi;
+export const { useGetPhysiciansListQuery, useGetPhysicianByIdQuery } =
+  physiciansApi;

@@ -1,5 +1,9 @@
 import { usePatients } from '@/context/patients.context';
-import { getPatientAddress, getPatientAge } from '@/lib/utils';
+import {
+  getPatientAddress,
+  getPatientAge,
+  getPhysicianFullName
+} from '@/lib/utils';
 import {
   Card,
   CardContent,
@@ -9,10 +13,12 @@ import {
 } from '@/components/ui/card';
 import LabelValue from '@/components/ui/label-value';
 import { PATIENTS_FORM_LABELS } from '@/constants/patients.constants';
+import { usePhysicians } from '@/context/physicians.context';
 
 export default function PatientPersonalInfo() {
   const { selectedPatient } = usePatients();
-  if (!selectedPatient) return null;
+  const { physicians } = usePhysicians();
+  if (!selectedPatient || !physicians) return null;
   return (
     <Card className="flex-1 mb-4 break-inside-avoid-column">
       <CardHeader className="pb-2">
@@ -51,7 +57,16 @@ export default function PatientPersonalInfo() {
             label={PATIENTS_FORM_LABELS.BLOOD_TYPE}
             value={selectedPatient.blood_type}
           />
-          <LabelValue label="Primary physician" value="Dr. Sarah Johnson" />
+          <LabelValue
+            label={PATIENTS_FORM_LABELS.PRIMARY_PHYSICIAN}
+            value={
+              getPhysicianFullName(
+                physicians.filter(
+                  (i) => i.id === selectedPatient.physician_id
+                )[0]
+              ) ?? selectedPatient.physician_id
+            }
+          />
           <LabelValue
             label={PATIENTS_FORM_LABELS.REGISTERED_FACILITY}
             value={selectedPatient.registered_facility}

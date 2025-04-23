@@ -1,4 +1,5 @@
 import { IPatient } from '@/context/patients.context';
+import { IPhysician } from '@/context/physicians.context';
 import { IQueue, IQueueStatus, QueueFilterType } from '@/context/queue.context';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -12,6 +13,13 @@ export const getPatientFullName = (data: IPatient | undefined) => {
   let tempData = data;
   if (Array.isArray(data)) tempData = data[0];
   return `${tempData.last_name}, ${tempData.first_name}`;
+};
+
+export const getPhysicianFullName = (data: IPhysician | undefined) => {
+  if (!data) return null;
+  let tempData = data;
+  if (Array.isArray(data)) tempData = data[0];
+  return `Dr. ${tempData.last_name}, ${tempData.first_name}`;
 };
 
 export const getPatientRegion = (data: IPatient | undefined) => {
@@ -184,4 +192,63 @@ export const filterQUeue = (
     );
   }
   return result;
+};
+
+export const generateBatchNumber = (date = new Date()) => {
+  const d = new Date(date);
+  const year = d.getFullYear().toString().substr(-2);
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const extra = d.getTime().toString().substr(0, 5);
+  return `${year}${month}${day}${extra}`;
+};
+
+export const generateTicketNumber = (start = 'AA000') => {
+  let current = start.toUpperCase();
+
+  function incrementLetters(letters) {
+    const chars = letters.split('');
+    let i = chars.length - 1;
+
+    while (i >= 0) {
+      if (chars[i] !== 'Z') {
+        chars[i] = String.fromCharCode(chars[i].charCodeAt(0) + 1);
+        break;
+      } else {
+        chars[i] = 'A';
+        i--;
+      }
+    }
+
+    return chars.join('');
+  }
+
+  return function getNext() {
+    let letters = current.slice(0, 2);
+    let number = parseInt(current.slice(2), 10);
+
+    number++;
+    if (number > 999) {
+      number = 1; // Reset to 001
+      letters = incrementLetters(letters);
+
+      if (letters === 'AA') {
+        // We’ve wrapped around completely
+        console.warn('Wrapped around to AA001');
+      }
+    }
+
+    current = `${letters}${number.toString().padStart(3, '0')}`;
+    return current;
+  };
+};
+
+export const validateStatus = (
+  response: Response,
+  body: IValidateStatusBody
+) => {
+  return (
+    (response.status === 200 || response.status === 201) &&
+    body.status === 'SUCCESS'
+  );
 };

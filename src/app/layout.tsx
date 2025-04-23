@@ -6,13 +6,11 @@ import './globals.css';
 import { AppSidebar } from '@/components/layout/Sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import Header from '@/components/layout/Header';
-import { PatientsProvider } from '../context/patients.context';
-import { Suspense } from 'react';
-import { QueueProvider } from '../context/queue.context';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { NavigationProvider } from '@/context/navigation.context';
-import StoreProvider from './storeProvider';
 import { InitializeWrapper } from './wrapper';
+import { ContextProvider } from '@/context/contextProvider';
+import { StoreProvider } from '@/app/storeProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -49,25 +47,21 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-full`}
       >
         <StoreProvider>
-          <PatientsProvider>
-            <QueueProvider>
-              <SidebarProvider>
-                <NavigationProvider>
-                  <TooltipProvider>
-                    <Suspense fallback="Loading...">
-                      <InitializeWrapper>
-                        <AppSidebar />
-                        <main className="w-full relative px-4 pb-4 overflow-x-hidden">
-                          <Header />
-                          <div className="content w-full pt-16">{children}</div>
-                        </main>
-                      </InitializeWrapper>
-                    </Suspense>
-                  </TooltipProvider>
-                </NavigationProvider>
-              </SidebarProvider>
-            </QueueProvider>
-          </PatientsProvider>
+          <ContextProvider>
+            <SidebarProvider>
+              <NavigationProvider>
+                <TooltipProvider>
+                  <InitializeWrapper>
+                    <AppSidebar />
+                    <main className="w-full relative px-4 pb-4 overflow-x-hidden">
+                      <Header />
+                      <div className="content w-full pt-16">{children}</div>
+                    </main>
+                  </InitializeWrapper>
+                </TooltipProvider>
+              </NavigationProvider>
+            </SidebarProvider>
+          </ContextProvider>
         </StoreProvider>
       </body>
     </html>

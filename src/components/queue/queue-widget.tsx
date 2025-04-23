@@ -10,7 +10,7 @@ import { QueueWidgetSkeleton } from './queue-widget.skeleton';
 
 export default function QueueWidget() {
   const { patients } = usePatients();
-  const { filters, addToQueue } = useQueue();
+  const { queue, filters, addToQueue } = useQueue();
   const [
     triggerFetchQueryList,
     { data: queueData, isFetching, isLoading, isSuccess, isUninitialized }
@@ -18,27 +18,27 @@ export default function QueueWidget() {
 
   if (isUninitialized) triggerFetchQueryList();
 
-  if (!patients || isLoading) return <QueueWidgetSkeleton />;
+  if (!queue || !patients || isLoading) return <QueueWidgetSkeleton />;
 
   let currentServed: string | null = null;
   let filteredQueue;
+
   if (isSuccess) {
-    const { data } = queueData;
-    addToQueue(data);
-    if (data.find((item) => item.status === 'in-progress')) {
-      const inProgressQueue = data.filter(
+    addToQueue(queueData.data);
+  }
+
+  if (queue) {
+    if (queue.find((item) => item.status === 'in-progress')) {
+      const inProgressQueue = queue.filter(
         (item) => item.status === 'in-progress'
       )[0];
       const inProgressPatient = patients.filter(
-        (inProgressPatient) =>
-          inProgressPatient.id === inProgressQueue.patient_id
+        (patient) => patient.id === inProgressQueue.patient_id
       )[0];
       currentServed = getPatientFullName(inProgressPatient);
     }
-    filteredQueue = filterQUeue(queueData.data, filters);
+    filteredQueue = filterQUeue(queue, filters);
   }
-
-  if (!filteredQueue) return <QueueWidgetSkeleton />;
 
   return (
     <div className="py-2">
@@ -63,9 +63,15 @@ export default function QueueWidget() {
         <QueueWidgetActiveFilter isFetching={isFetching} />
         <ScrollArea className="h-[calc(100dvh-230px)] md:h-64 w-full rounded-md border">
           <div className="grid grid-cols-1 gap-0">
-            {filteredQueue.map((queue, index) => (
-              <QueueItem key={`${queue.id}`} index={index} queue={queue} />
-            ))}
+            {filteredQueue.length === 0 ? (
+              <div className="relative flex flex-col items-center justify-between px-2 py-2 text-gray-400 text-sm">
+                Queue is empty...
+              </div>
+            ) : (
+              filteredQueue.map((queue, index) => (
+                <QueueItem key={`${queue.id}`} index={index} queue={queue} />
+              ))
+            )}
           </div>
         </ScrollArea>
       </div>

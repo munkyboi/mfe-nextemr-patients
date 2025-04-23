@@ -128,7 +128,7 @@ function PatientSearchBox({ id }: PatientSearchBoxProps) {
             </Command>
           </PopoverContent>
         </Popover>
-        <PatientSearchActions disabled={patientIsLoading} />
+        <PatientSearchActions />
       </div>
     </CardHeader>
   );

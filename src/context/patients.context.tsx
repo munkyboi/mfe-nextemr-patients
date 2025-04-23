@@ -25,6 +25,7 @@ export interface IPatient {
   postal_code: string;
   vip: string;
   display_id: string;
+  physician_id: string;
 }
 
 interface IPatientsContext {
