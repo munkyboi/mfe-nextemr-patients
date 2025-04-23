@@ -10,7 +10,7 @@ import { validateStatus } from '../utils';
 //   'id' | 'ticket_number' | 'date_created' | 'last_updated' | 'status'
 // >;
 
-interface IAddToQueueResponse {
+export interface IAddToQueueResponse {
   batchQueue: IQueue[];
   created: IQueue;
 }
@@ -50,6 +50,14 @@ export const queueApi = createApi({
         body,
         validateStatus: validateStatus
       })
+    }),
+    updateQueue: builder.mutation<IResponse<IAddToQueueResponse>, IQueue>({
+      query: (body) => ({
+        url: `${ENDPOINTS.UPDATE_QUEUE}/${body.id}`,
+        method: 'PUT',
+        body,
+        validateStatus: validateStatus
+      })
     })
   })
 });
@@ -58,5 +66,6 @@ export const {
   useGetQueueListQuery,
   useGetQueueByIdQuery,
   useLazyGetQueueListQuery,
-  useAddToQueueMutation
+  useAddToQueueMutation,
+  useUpdateQueueMutation
 } = queueApi;

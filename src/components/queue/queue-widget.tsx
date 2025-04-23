@@ -7,25 +7,29 @@ import QueueWidgetActiveFilter from './queue-widget-active-filter';
 import { IQueue, useQueue } from '@/context/queue.context';
 import { useLazyGetQueueListQuery } from '@/lib/api/queue.api';
 import { QueueWidgetSkeleton } from './queue-widget.skeleton';
+import { useEffect } from 'react';
 
 export default function QueueWidget() {
   const { patients } = usePatients();
-  const { queue, filters, addToQueue } = useQueue();
-  const [
-    triggerFetchQueryList,
-    { data: queueData, isFetching, isLoading, isSuccess, isUninitialized }
-  ] = useLazyGetQueueListQuery();
+  const { queue, filters, saveAllQueue } = useQueue();
+  const [getQueueList, { isFetching, isLoading }] = useLazyGetQueueListQuery();
 
-  if (isUninitialized) triggerFetchQueryList();
+  useEffect(() => {
+    (async () => {
+      try {
+        const queueListResult = await getQueueList().unwrap();
+        saveAllQueue(queueListResult.data);
+      } catch (error) {
+        console.log(`Failed to fetch queue list - ${error}`);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!queue || !patients || isLoading) return <QueueWidgetSkeleton />;
 
   let currentServed: string | null = null;
   let filteredQueue: IQueue[] | undefined = [];
-
-  if (isSuccess) {
-    addToQueue(queueData.data);
-  }
 
   if (queue) {
     if (queue.find((item) => item.status === 'in-progress')) {

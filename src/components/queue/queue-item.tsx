@@ -20,13 +20,15 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '../ui/badge';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { getPatientFullName, cn } from '@/lib/utils';
 import QueueNotificationToggle from './queue-notification-toggle';
 import { usePatients } from '@/context/patients.context';
 import { Button } from '../ui/button';
 import { IQueue, useQueue } from '@/context/queue.context';
 import { useRouter } from 'next/navigation';
+import { useUpdateQueueMutation } from '@/lib/api/queue.api';
+import { QUEUE_STATUS } from '@/constants/queue.constants';
 
 interface IQueueItemProps {
   index: number;
@@ -48,7 +50,8 @@ type IBadgeVariant =
 export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
   const router = useRouter();
   const { patients } = usePatients();
-  const { toggleOpen } = useQueue();
+  const { toggleOpen, saveAllQueue } = useQueue();
+
   const adjustedIndex = index + 1;
   const status = queue.status || 'N/A';
   let variant: IBadgeVariant;
@@ -60,12 +63,28 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
     variant = 'cancelled';
   if (queue.status === 'billed') variant = 'warning';
 
+  const [submitUpdate, { isLoading: updateIsLoading }] =
+    useUpdateQueueMutation();
+
   const shouldDisableMenu = queue.status === 'completed';
   const shouldShowBadge = true;
 
   const handleViewPatientInfo = () => {
     toggleOpen(false);
     router.push(`/patients/${queue.patient_id}/info`);
+  };
+
+  const handleCancelQueue = async () => {
+    const updateQueue: IQueue = {
+      ...queue,
+      status: QUEUE_STATUS.CANCELLED
+    };
+    try {
+      const submitUpdateResult = await submitUpdate(updateQueue).unwrap();
+      saveAllQueue(submitUpdateResult.data.batchQueue);
+    } catch (error) {
+      console.log(`Failed to update queue - ${error}`);
+    }
   };
 
   if (!patients) return null;
@@ -83,7 +102,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
         {
           'bg-green-100': queue.status === 'in-progress',
           'text-gray-400': variant === 'cancelled',
-          'border-b-gray-200': variant === 'cancelled'
+          'border-b-gray-200': variant === 'cancelled' || updateIsLoading
         }
       )}
     >
@@ -157,7 +176,10 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
                   Serve now
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem disabled={variant === 'cancelled'}>
+              <DropdownMenuItem
+                disabled={variant === 'cancelled'}
+                onClick={handleCancelQueue}
+              >
                 <Ban />
                 Cancel queue
               </DropdownMenuItem>

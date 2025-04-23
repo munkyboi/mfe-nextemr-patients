@@ -172,7 +172,7 @@ export const generateRandomStatus = () => {
   return status[rand] as IQueueStatus;
 };
 
-const filterStatusMap = {
+const filterStatusMap: { [key: string]: string } = {
   'in-progress': 'active',
   queued: 'active',
   notified: 'active',

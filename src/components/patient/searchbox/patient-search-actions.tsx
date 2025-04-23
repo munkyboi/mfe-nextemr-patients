@@ -12,36 +12,42 @@ import {
 import { CalendarPlusIcon } from 'lucide-react';
 import { Badge } from '../../ui/badge';
 import { usePatients } from '@/context/patients.context';
-import { useAddToQueueMutation } from '@/lib/api/queue.api';
+import {
+  IAddToQueueResponse,
+  useAddToQueueMutation
+} from '@/lib/api/queue.api';
 import { useGetPatientsQuery } from '@/lib/api/patients.api';
-import { useQueue } from '@/context/queue.context';
+import { IQueue, useQueue } from '@/context/queue.context';
+import { useState } from 'react';
+import { IResponse } from '@/lib/api/api.types';
 
 export default function PatientSearchActions() {
   const { selectedPatient } = usePatients();
-  const { queue, addToQueue } = useQueue();
+  const { queue, saveAllQueue } = useQueue();
+  const [addToQueueFetching, setAddToQueueFetching] = useState(false);
   const { isLoading: getPatientsIsLoading } = useGetPatientsQuery();
-  const [
-    submit,
-    { data: addToQueueData, isLoading: addToQueueIsLoading, isSuccess }
-  ] = useAddToQueueMutation();
+  const [addToQueue] = useAddToQueueMutation();
 
-  const isLoading = getPatientsIsLoading || addToQueueIsLoading;
+  const isLoading = getPatientsIsLoading || addToQueueFetching;
   const isDisabled = !queue || !selectedPatient;
 
-  const handleAddToQueue = () => {
+  const handleAddToQueue = async () => {
+    setAddToQueueFetching(true);
     const body = {
       physician_id: selectedPatient?.physician_id,
       patient_id: selectedPatient?.id,
       note: ''
     };
-    submit(body);
+    try {
+      const addToQueueResult = await addToQueue(body).unwrap();
+      console.log('🚀 ~ addToQueueResult:', addToQueueResult);
+      saveAllQueue(addToQueueResult?.data?.batchQueue);
+    } catch (error) {
+      console.log('🚀 ~ handleAddToQueue ~ error:', error);
+    }
+    setAddToQueueFetching(false);
   };
 
-  if (addToQueueIsLoading) console.log('sending...');
-  if (isSuccess) {
-    console.log('🚀 ~ addToQueueData:', addToQueueData);
-    addToQueue(addToQueueData.data.batchQueue);
-  }
   const currentQueueLength = (queue ? queue.length : 0) + 1;
 
   return (

@@ -19,7 +19,7 @@ export interface IQueue {
   ticket_number: string;
   date_created: string;
   last_updated: string;
-  status: IQueueStatus;
+  status: IQueueStatus | string;
 }
 
 export type QueueFilterType = 'active' | 'inactive' | string;
@@ -28,11 +28,14 @@ interface IQueueContext {
   isOpen: boolean;
   toggleOpen: (e: boolean | undefined) => void;
   queue: IQueue[] | undefined;
-  addToQueue: (payload: IQueue[] | undefined) => void;
+  saveAllQueue: (payload: IQueue[] | undefined) => void;
   selectedQueue: IQueue | undefined;
   selectQueue: (payload: IQueue | undefined) => void;
   filters: QueueFilterType[] | undefined;
   saveFilter: (payload: QueueFilterType[] | undefined) => void;
+  // updateQueueItem: (payload: IQueue) => void;
+  // addToQueue: (payload: IQueue) => void;
+  setQueue: React.Dispatch<React.SetStateAction<IQueue[] | undefined>>;
 }
 
 // Create the context
@@ -48,10 +51,23 @@ export const QueueProvider = ({ children }: { children: ReactNode }) => {
     'inactive'
   ]);
 
-  const addToQueue = (payload: IQueue[] | undefined) => {
-    console.log(payload);
+  const saveAllQueue = (payload: IQueue[] | undefined) => {
+    console.log('🚀 ~ saveAllQueue ~ payload:', payload);
     setQueue(payload);
   };
+
+  // const updateQueueItem = (payload: IQueue) => {
+  //   setQueue((prev) =>
+  //     prev?.map((item) =>
+  //       item.id === payload.id ? { ...item, ...payload } : item
+  //     )
+  //   );
+  // };
+
+  // const addToQueue = (payload: IQueue[]) => {
+  //   setQueue(payload);
+  // };
+
   const selectQueue = (patient: IQueue | undefined) =>
     setSelectedPatient(patient);
 
@@ -69,11 +85,14 @@ export const QueueProvider = ({ children }: { children: ReactNode }) => {
         isOpen,
         toggleOpen,
         queue,
-        addToQueue,
+        saveAllQueue,
         selectedQueue,
         selectQueue,
         filters,
-        saveFilter
+        saveFilter,
+        setQueue
+        // updateQueueItem,
+        // addToQueue
       }}
     >
       {children}
