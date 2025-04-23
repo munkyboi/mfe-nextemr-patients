@@ -4,7 +4,7 @@ import { ScrollArea } from '../ui/scroll-area';
 import { usePatients } from '@/context/patients.context';
 import { filterQUeue, getPatientFullName } from '@/lib/utils';
 import QueueWidgetActiveFilter from './queue-widget-active-filter';
-import { useQueue } from '@/context/queue.context';
+import { IQueue, useQueue } from '@/context/queue.context';
 import { useLazyGetQueueListQuery } from '@/lib/api/queue.api';
 import { QueueWidgetSkeleton } from './queue-widget.skeleton';
 
@@ -21,7 +21,7 @@ export default function QueueWidget() {
   if (!queue || !patients || isLoading) return <QueueWidgetSkeleton />;
 
   let currentServed: string | null = null;
-  let filteredQueue;
+  let filteredQueue: IQueue[] | undefined = [];
 
   if (isSuccess) {
     addToQueue(queueData.data);
@@ -63,12 +63,12 @@ export default function QueueWidget() {
         <QueueWidgetActiveFilter isFetching={isFetching} />
         <ScrollArea className="h-[calc(100dvh-230px)] md:h-64 w-full rounded-md border">
           <div className="grid grid-cols-1 gap-0">
-            {filteredQueue.length === 0 ? (
+            {filteredQueue?.length === 0 ? (
               <div className="relative flex flex-col items-center justify-between px-2 py-2 text-gray-400 text-sm">
                 Queue is empty...
               </div>
             ) : (
-              filteredQueue.map((queue, index) => (
+              filteredQueue?.map((queue, index) => (
                 <QueueItem key={`${queue.id}`} index={index} queue={queue} />
               ))
             )}
