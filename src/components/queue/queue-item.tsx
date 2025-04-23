@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '../ui/badge';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { getPatientFullName, cn } from '@/lib/utils';
 import QueueNotificationToggle from './queue-notification-toggle';
 import { usePatients } from '@/context/patients.context';
