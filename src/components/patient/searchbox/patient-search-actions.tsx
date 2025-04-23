@@ -12,14 +12,10 @@ import {
 import { CalendarPlusIcon } from 'lucide-react';
 import { Badge } from '../../ui/badge';
 import { usePatients } from '@/context/patients.context';
-import {
-  IAddToQueueResponse,
-  useAddToQueueMutation
-} from '@/lib/api/queue.api';
+import { useAddToQueueMutation } from '@/lib/api/queue.api';
 import { useGetPatientsQuery } from '@/lib/api/patients.api';
-import { IQueue, useQueue } from '@/context/queue.context';
+import { useQueue } from '@/context/queue.context';
 import { useState } from 'react';
-import { IResponse } from '@/lib/api/api.types';
 
 export default function PatientSearchActions() {
   const { selectedPatient } = usePatients();
