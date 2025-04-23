@@ -207,7 +207,7 @@ export const generateBatchNumber = (date = new Date()) => {
 export const generateTicketNumber = (start = 'AA000') => {
   let current = start.toUpperCase();
 
-  function incrementLetters(letters) {
+  function incrementLetters(letters: string) {
     const chars = letters.split('');
     let i = chars.length - 1;
 
