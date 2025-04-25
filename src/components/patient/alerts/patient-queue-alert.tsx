@@ -54,7 +54,7 @@ export const PatientQueueAlert = () => {
 
   const variant: IFloatAlertVariants = generateVariantByStatus(
     selectedQueue?.status || ''
-  );
+  ) as IFloatAlertVariants;
 
   return (
     <FloatingAlert
