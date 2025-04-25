@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ENDPOINTS } from '../endpoints';
-import { IResponse } from './api.types';
+import { ENDPOINTS } from '@/lib/endpoints';
+import { IResponse } from '@/lib/api/api.types';
 import { IPatient } from '@/context/patients.context';
 // import { FABIRCATE_TOKEN } from './api.constants';
 import { validateStatus } from '../utils';

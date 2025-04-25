@@ -1,4 +1,5 @@
 import ProfileInfo from '@/components/patient/patient-info';
+import { PatientLabs } from '@/components/patient/patient-labs';
 
 export const PATIENTS_FORM_LABELS = {
   PATIENT_ID: 'Patient ID',
@@ -61,7 +62,7 @@ export const TABS_LIST = [
   {
     id: 'labs',
     label: 'Labs',
-    render: () => <div>Laboratories content</div>
+    render: () => <PatientLabs />
   },
   {
     id: 'tests',

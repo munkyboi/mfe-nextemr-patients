@@ -72,8 +72,8 @@ export default function QueueWidget() {
                 Queue is empty...
               </div>
             ) : (
-              filteredQueue?.map((queue, index) => (
-                <QueueItem key={`${queue.id}`} index={index} queue={queue} />
+              filteredQueue?.map((queue) => (
+                <QueueItem key={`${queue.id}`} queue={queue} />
               ))
             )}
           </div>

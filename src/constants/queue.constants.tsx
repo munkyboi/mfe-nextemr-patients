@@ -1,4 +1,4 @@
-export const QUEUE_STATUS = {
+export const QUEUE_STATUS: { [key: string]: string } = {
   QUEUED: 'queued',
   IN_PROGRESS: 'in-progress',
   COMPLETED: 'completed',

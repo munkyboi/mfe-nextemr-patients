@@ -28,7 +28,7 @@ export default function Header() {
   return (
     <div
       className={cn(
-        'header fixed top-0 right-0 left-0 md:left-[256px] px-4 bg-background flex flex-nowrap h-16 z-50 transition-[left]',
+        'header sticky top-0 right-0 left-0 md:left-[256px] bg-background flex flex-nowrap h-16 z-50 transition-[left] px-4',
         {
           'md:left-0': !open
         }

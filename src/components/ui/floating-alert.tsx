@@ -7,6 +7,7 @@ import { Button } from './button';
 import { cn } from '@/lib/utils';
 import { useSidebar } from './sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Spinner } from './spinner';
 
 interface IActionButton {
   label: ReactNode;
@@ -14,16 +15,25 @@ interface IActionButton {
   icon?: ReactNode;
 }
 
+export type IFloatAlertVariants =
+  | 'positive'
+  | 'destructive'
+  | 'info'
+  | 'warning'
+  | 'default'
+  | string;
+
 interface IFloatingAlert {
-  variant?: 'positive' | 'destructive' | 'info' | 'warning' | 'default';
+  variant?: IFloatAlertVariants;
   icon?: ReactNode;
   description: ReactNode;
-  actionButton: IActionButton;
+  actionButton?: IActionButton | undefined;
   exitable?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   autoHide?: boolean;
   autoHideDuration?: number | null;
+  processing?: boolean;
 }
 
 export const FloatingAlert: FC<IFloatingAlert> = ({
@@ -35,7 +45,8 @@ export const FloatingAlert: FC<IFloatingAlert> = ({
   open: controlledOpen,
   onOpenChange,
   autoHide = false,
-  autoHideDuration = 5000
+  autoHideDuration = 5000,
+  processing
 }) => {
   const { open: sidebarOpen } = useSidebar();
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
@@ -99,7 +110,7 @@ export const FloatingAlert: FC<IFloatingAlert> = ({
               variant={variant}
               className="text-[12px] w-auto items-center justify-start p-2 min-h-[42px]"
             >
-              {icon}
+              {processing ? <Spinner size="small" /> : icon}
               <AlertDescription>
                 <div className="w-full flex flex-row flex-nowrap gap-4 items-center">
                   <div className="flex-grow">{description}</div>

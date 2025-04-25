@@ -25,13 +25,12 @@ import { getPatientFullName, cn } from '@/lib/utils';
 import QueueNotificationToggle from './queue-notification-toggle';
 import { usePatients } from '@/context/patients.context';
 import { Button } from '../ui/button';
-import { IQueue, useQueue } from '@/context/queue.context';
+import { IQueue, IQueueStatus, useQueue } from '@/context/queue.context';
 import { useRouter } from 'next/navigation';
 import { useUpdateQueueMutation } from '@/lib/api/queue.api';
 import { QUEUE_STATUS } from '@/constants/queue.constants';
 
 interface IQueueItemProps {
-  index: number;
   queue: IQueue;
 }
 
@@ -47,12 +46,11 @@ type IBadgeVariant =
   | null
   | undefined;
 
-export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
+export const QueueItem: FC<IQueueItemProps> = ({ queue }) => {
   const router = useRouter();
   const { patients } = usePatients();
   const { toggleOpen, saveAllQueue } = useQueue();
 
-  const adjustedIndex = index + 1;
   const status = queue.status || 'N/A';
   let variant: IBadgeVariant;
   if (queue.status === 'in-progress' || queue.status === 'notified')
@@ -77,7 +75,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
   const handleCancelQueue = async () => {
     const updateQueue: IQueue = {
       ...queue,
-      status: QUEUE_STATUS.CANCELLED
+      status: QUEUE_STATUS.CANCELLED as IQueueStatus
     };
     try {
       const submitUpdateResult = await submitUpdate(updateQueue).unwrap();
@@ -111,7 +109,7 @@ export const QueueItem: FC<IQueueItemProps> = ({ index, queue }) => {
           <div className="flex flex-col gap-0 text-center">
             <div className="text-md font-bold leading-6">{ticket}</div>
             <div className="text-[10px] font-medium leading-2 text-gray-400">
-              #{adjustedIndex}
+              #{queue.queue_index}
             </div>
           </div>
         </div>

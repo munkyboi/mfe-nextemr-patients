@@ -16,10 +16,12 @@ export interface IQueue {
   physician_id: string;
   patient_id: string;
   note: string;
+  queue_index: number;
+  queue_batch: string;
   ticket_number: string;
   date_created: string;
   last_updated: string;
-  status: IQueueStatus | string;
+  status: IQueueStatus;
 }
 
 export type QueueFilterType = 'active' | 'inactive' | string;

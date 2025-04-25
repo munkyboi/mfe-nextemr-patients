@@ -4,6 +4,7 @@ import { IQueue, IQueueStatus, QueueFilterType } from '@/context/queue.context';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { IValidateStatusBody } from './api/api.constants';
+import { QUEUE_STATUS } from '@/constants/queue.constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -182,6 +183,7 @@ const filterStatusMap: { [key: string]: string } = {
   completed: 'inactive',
   paid: 'inactive'
 };
+
 export const filterQUeue = (
   queue: IQueue[] | undefined,
   filters: QueueFilterType[] | undefined
@@ -252,4 +254,15 @@ export const validateStatus = (
     (response.status === 200 || response.status === 201) &&
     body.status === 'SUCCESS'
   );
+};
+
+export const generateVariantByStatus = (status: string = '') => {
+  let result = 'default';
+  if (status === QUEUE_STATUS.QUEUED) result = 'info';
+  if (status === QUEUE_STATUS.NOTIFIED) result = 'info';
+  if (status === QUEUE_STATUS.IN_PROGRESS) result = 'positive';
+  if (status === QUEUE_STATUS.BILLED) result = 'positive';
+  if (status === QUEUE_STATUS.PAID) result = 'positive';
+
+  return result;
 };
