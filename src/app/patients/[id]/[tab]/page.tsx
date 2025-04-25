@@ -45,17 +45,15 @@ export default function PatientInfo({ params }: PatientInfoProps) {
     <>
       <Card className="gap-4">
         <PatientSearchBox id={id} />
-        <CardContent>
-          <Tabs
-            defaultValue={TABS_LIST[0].id}
-            value={tab}
-            onValueChange={handleTabChange}
-          >
-            <PatientsTabList id={id} />
-            <PatientsTabContent id={id} />
-          </Tabs>
-        </CardContent>
       </Card>
+      <Tabs
+        defaultValue={TABS_LIST[0].id}
+        value={tab}
+        onValueChange={handleTabChange}
+      >
+        <PatientsTabList id={id} />
+        <PatientsTabContent id={id} />
+      </Tabs>
       <PatientQueueAlert />
     </>
   );

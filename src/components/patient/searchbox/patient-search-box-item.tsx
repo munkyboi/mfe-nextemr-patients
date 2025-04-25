@@ -43,7 +43,7 @@ export const PatientSearchBoxItem: FC<IPatientSearchBoxItemProps> = ({
           ID: {patient.display_id}
         </span>
       </div>
-      {patient.vip === '1' && (
+      {patient.vip && (
         <Badge variant="info" className="ml-auto">
           VIP
         </Badge>

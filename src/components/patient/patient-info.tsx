@@ -29,7 +29,7 @@ export default function ProfileInfo({ id }: IProfileInfoProps) {
     <div className="fluid mx-auto">
       <div className="flex flex-col sm:flex-row flex-nowrap gap-y-4 sm:gap-4">
         <div className="relative w-full sm:w-[200px] flex flex-col justify-start items-center">
-          <Avatar className="aspect-square h-[200px] w-[200px] border-4 border-background mb-4 z-2 relative bg-gray-300">
+          <Avatar className="aspect-square h-[200px] w-[200px] border-4 border-white mb-4 z-2 relative bg-gray-300">
             <AvatarImage src={selectedPatient.photo} alt="User" />
             <AvatarFallback>BT</AvatarFallback>
           </Avatar>
@@ -38,24 +38,24 @@ export default function ProfileInfo({ id }: IProfileInfoProps) {
           )}
           <div className="flex flex-col items-center mb-4">
             <div className="font-medium text-center">
-              <div className="inline-block text-2xl">
+              <div className="inline-block text-2xl leading-6 mb-2">
                 {getPatientFullName(selectedPatient)}
+                {selectedPatient.vip && (
+                  <Badge className="ml-2 text-[9px] leading-4 bg-blue-500 inline-block">
+                    VIP
+                  </Badge>
+                )}
               </div>
-              {selectedPatient.vip === '1' && (
-                <Badge className="ml-2 text-[9px] leading-3 bg-blue-500 inline-block">
-                  VIP
-                </Badge>
-              )}
             </div>
-            <div className="text-xs font-normal text-gray-400 text-center">
-              {PATIENTS_FORM_LABELS.PATIENT_ID}: {selectedPatient.display_id}
+            <div className="text-xs font-normal text-gray-500 text-center leading-4">
+              {selectedPatient.display_id}
             </div>
           </div>
           <div className="flex flex-nowrap items-center justify-center gap-2 mb-4">
             <Button
               variant="outline"
               size="sm"
-              className="bg-background/80 backdrop-blur-sm text-[12px]"
+              className="bg-white backdrop-blur-sm text-[12px]"
             >
               <Mail className="h-2 w-2 mr-2" />
               Message
@@ -63,13 +63,13 @@ export default function ProfileInfo({ id }: IProfileInfoProps) {
             <Button
               variant="outline"
               size="sm"
-              className="bg-background/80 backdrop-blur-sm text-[12px]"
+              className="bg-white backdrop-blur-sm text-[12px]"
             >
               <Pen className="h-2 w-2 mr-2" />
               Edit
             </Button>
           </div>
-          <div className="flex flex-col justify-center w-full rounded-md border">
+          <div className="flex flex-col justify-center w-full rounded-md border bg-white">
             <div className="flex flex-nowrap flex-row justify-center items-center gap-2 py-1 px-4">
               <Phone className="h-4 w-4" />
               <span className="text-[12px] leading-6">

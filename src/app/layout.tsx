@@ -55,7 +55,9 @@ export default function RootLayout({
                     <AppSidebar />
                     <main className="w-full relative pb-4">
                       <Header />
-                      <div className="content w-full px-4 pt-0">{children}</div>
+                      <div className="content w-full px-4 pt-0 space-y-4">
+                        {children}
+                      </div>
                     </main>
                   </InitializeWrapper>
                 </TooltipProvider>
