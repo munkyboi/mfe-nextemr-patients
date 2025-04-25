@@ -1,5 +1,5 @@
 import { Container, HandCoins, Home, LucideProps, User } from 'lucide-react';
-import { ForwardRefExoticComponent, ReactNode, RefAttributes } from 'react';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
 export interface ISidebarNavItem {
   id: string;

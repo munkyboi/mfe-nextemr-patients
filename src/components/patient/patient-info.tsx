@@ -6,7 +6,6 @@ import { Separator } from '../ui/separator';
 import { usePatients } from '@/context/patients.context';
 import { getPatientFullName, getPatientRegion } from '@/lib/utils';
 import { Badge } from '../ui/badge';
-import { PATIENTS_FORM_LABELS } from '@/constants/patients.constants';
 import PatientVitalStatistics from './info/vital-stats';
 import PatientMedicalInformation from './info/medical-information';
 import PatientInsuranceInformation from './info/insurance-information';

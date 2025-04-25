@@ -1,7 +1,7 @@
 'use client';
 
 import { use, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { PatientSearchBox } from '@/components/patient/searchbox/patient-search-box';
 import { Tabs } from '@/components/ui/tabs';
 import { PatientQueueAlert } from '@/components/patient/alerts/patient-queue-alert';

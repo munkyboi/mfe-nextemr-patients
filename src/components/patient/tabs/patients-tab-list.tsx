@@ -3,7 +3,6 @@ import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetPatientByIdQuery } from '@/lib/api/patients.api';
 import { PatientsTabListSkeleton } from './patients-tab-list.skeleton';
 import { TABS_LIST } from '@/constants/patients.constants';
-import { Card } from '@/components/ui/card';
 
 interface IPatientsTabListProps {
   id: string;
