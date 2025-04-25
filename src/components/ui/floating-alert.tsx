@@ -20,8 +20,7 @@ export type IFloatAlertVariants =
   | 'destructive'
   | 'info'
   | 'warning'
-  | 'default'
-  | string;
+  | 'default';
 
 interface IFloatingAlert {
   variant?: IFloatAlertVariants;
