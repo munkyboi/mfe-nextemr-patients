@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '../ui/select';
+import { useDebounce } from '@/hooks/use-debounce';
 
 // Sample data for test types
 const testTypes = [
@@ -605,11 +606,12 @@ export function PatientLabs() {
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState('25');
+  const debouncedQuery = useDebounce(searchQuery, 500);
 
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedTestType, searchQuery]);
+  }, [selectedTestType, debouncedQuery]);
 
   // Filter records based on selected test type
   const filteredByType = selectedTestType
@@ -617,9 +619,9 @@ export function PatientLabs() {
     : labTests;
 
   // Filter records based on search query
-  const filteredRecords = searchQuery
+  const filteredRecords = debouncedQuery
     ? filteredByType.filter((record) => {
-        const query = searchQuery.toLowerCase();
+        const query = debouncedQuery.toLowerCase();
         return (
           record.patientId.toLowerCase().includes(query) ||
           record.testDate.includes(query) ||
@@ -680,7 +682,7 @@ export function PatientLabs() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Normal':
-        return 'text-green-600';
+        return 'text-gray-600';
       case 'Abnormal':
         return 'text-amber-600';
       case 'Critical':
@@ -695,7 +697,7 @@ export function PatientLabs() {
     const counts: Record<string, number> = {};
 
     // If search is active, count from filtered records
-    const recordsToCount = searchQuery ? filteredRecords : labTests;
+    const recordsToCount = debouncedQuery ? filteredRecords : labTests;
 
     recordsToCount.forEach((test) => {
       if (!counts[test.testType]) {
@@ -776,9 +778,9 @@ export function PatientLabs() {
         <div className="flex-grow">
           <div className="gap-4">
             <Card>
-              <CardHeader className="border-b-1">
+              <CardHeader className="border-b-1 pb-4">
                 {/* Search Bar and Page Size Selector */}
-                <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center pb-2">
                   <div className="relative flex-1">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -788,7 +790,7 @@ export function PatientLabs() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    {searchQuery && (
+                    {debouncedQuery && (
                       <Button
                         variant="ghost"
                         size="sm"
@@ -821,18 +823,16 @@ export function PatientLabs() {
                     </Select>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
                 {/* Results Count */}
-                <div className="mb-2 text-sm text-muted-foreground">
+                <div className="text-[12px] text-muted-foreground w-full text-right">
                   {filteredRecords.length}{' '}
                   {filteredRecords.length === 1 ? 'result' : 'results'} found
-                  {searchQuery && (
+                  {debouncedQuery && (
                     <>
                       {' '}
                       for{' '}
                       <span className="font-medium">
-                        &quot;{searchQuery}&quot;
+                        &quot;{debouncedQuery}&quot;
                       </span>
                     </>
                   )}
@@ -848,7 +848,8 @@ export function PatientLabs() {
                     </>
                   )}
                 </div>
-
+              </CardHeader>
+              <CardContent className="">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -914,10 +915,11 @@ export function PatientLabs() {
                     {paginatedRecords.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={8} className="text-center py-8">
-                          {searchQuery ? (
+                          {debouncedQuery ? (
                             <div>
                               <p className="text-muted-foreground">
-                                No results found for &quot;{searchQuery}&quot;
+                                No results found for &quot;{debouncedQuery}
+                                &quot;
                               </p>
                               <Button
                                 variant="link"
@@ -957,10 +959,10 @@ export function PatientLabs() {
                   </TableBody>
                 </Table>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="border-t [.border-t]:pt-4">
                 {/* Pagination */}
                 {paginatedRecords.length > 0 && (
-                  <div className="flex items-center justify-between px-4 py-4 border-t">
+                  <div className="flex items-center justify-between px-0 py-0 w-full">
                     <div className="text-sm text-muted-foreground">
                       Page {currentPage} of {totalPages}
                     </div>
