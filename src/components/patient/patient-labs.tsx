@@ -604,7 +604,7 @@ export function PatientLabs() {
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState('20');
+  const [pageSize, setPageSize] = useState('25');
 
   // Reset to first page when filters change
   useEffect(() => {
