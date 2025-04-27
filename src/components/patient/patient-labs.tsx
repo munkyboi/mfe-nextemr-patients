@@ -917,7 +917,7 @@ export function PatientLabs() {
                           {searchQuery ? (
                             <div>
                               <p className="text-muted-foreground">
-                                No results found for "{searchQuery}"
+                                No results found for &quot;{searchQuery}&quot;
                               </p>
                               <Button
                                 variant="link"
