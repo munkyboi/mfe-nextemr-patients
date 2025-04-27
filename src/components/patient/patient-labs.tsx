@@ -1,7 +1,14 @@
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Search,
+  X
+} from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -10,7 +17,16 @@ import {
   TableHeader,
   TableRow
 } from '../ui/table';
-import { Card } from '../ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '../ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '../ui/select';
 
 // Sample data for test types
 const testTypes = [
@@ -23,342 +39,554 @@ const testTypes = [
   { id: 7, name: 'TFT', fullName: 'Thyroid Function Tests' },
   { id: 8, name: 'Electrolytes', fullName: 'Electrolytes Panel' },
   { id: 9, name: 'KFT', fullName: 'Kidney Function Tests' },
-  { id: 10, name: 'Coagulation', fullName: 'Coagulation Tests' }
+  { id: 10, name: 'Coagulation', fullName: 'Coagulation Tests' },
+  { id: 11, name: 'HbA1c', fullName: 'Glycated Hemoglobin' },
+  { id: 12, name: 'CRP', fullName: 'C-Reactive Protein' },
+  { id: 13, name: 'ESR', fullName: 'Erythrocyte Sedimentation Rate' },
+  { id: 14, name: 'Vitamin', fullName: 'Vitamin Levels' },
+  { id: 15, name: 'Iron', fullName: 'Iron Studies' }
 ];
 
-// Sample data for laboratory tests
-const labTests = [
-  {
-    id: 'LT-10042',
-    patientId: 'PT-7823',
-    testDate: '2023-04-15',
-    testType: 'CBC',
-    testName: 'Hemoglobin',
-    result: '14.2',
-    referenceRange: '13.5-17.5',
-    units: 'g/dL',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10043',
-    patientId: 'PT-7823',
-    testDate: '2023-04-15',
-    testType: 'CBC',
-    testName: 'WBC',
-    result: '7.2',
-    referenceRange: '4.5-11.0',
-    units: '10³/µL',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10044',
-    patientId: 'PT-7823',
-    testDate: '2023-04-15',
-    testType: 'CBC',
-    testName: 'Platelets',
-    result: '250',
-    referenceRange: '150-450',
-    units: '10³/µL',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10045',
-    patientId: 'PT-6591',
-    testDate: '2023-04-15',
-    testType: 'LFT',
-    testName: 'ALT',
-    result: '65',
-    referenceRange: '7-55',
-    units: 'U/L',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10046',
-    patientId: 'PT-6591',
-    testDate: '2023-04-15',
-    testType: 'LFT',
-    testName: 'AST',
-    result: '72',
-    referenceRange: '8-48',
-    units: 'U/L',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10047',
-    patientId: 'PT-6591',
-    testDate: '2023-04-15',
-    testType: 'LFT',
-    testName: 'Bilirubin Total',
-    result: '1.2',
-    referenceRange: '0.1-1.2',
-    units: 'mg/dL',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10048',
-    patientId: 'PT-9034',
-    testDate: '2023-04-16',
-    testType: 'Lipid',
-    testName: 'Total Cholesterol',
-    result: '245',
-    referenceRange: '<200',
-    units: 'mg/dL',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10049',
-    patientId: 'PT-9034',
-    testDate: '2023-04-16',
-    testType: 'Lipid',
-    testName: 'LDL',
-    result: '162',
-    referenceRange: '<100',
-    units: 'mg/dL',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10050',
-    patientId: 'PT-9034',
-    testDate: '2023-04-16',
-    testType: 'Lipid',
-    testName: 'HDL',
-    result: '38',
-    referenceRange: '>40',
-    units: 'mg/dL',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10051',
-    patientId: 'PT-9034',
-    testDate: '2023-04-16',
-    testType: 'Lipid',
-    testName: 'Triglycerides',
-    result: '220',
-    referenceRange: '<150',
-    units: 'mg/dL',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10052',
-    patientId: 'PT-4527',
-    testDate: '2023-04-16',
-    testType: 'Stool',
-    testName: 'Occult Blood',
-    result: 'Negative',
-    referenceRange: 'Negative',
-    units: '',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10053',
-    patientId: 'PT-4527',
-    testDate: '2023-04-16',
-    testType: 'Stool',
-    testName: 'WBC',
-    result: '0-2',
-    referenceRange: '0-5',
-    units: 'per HPF',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10054',
-    patientId: 'PT-4527',
-    testDate: '2023-04-16',
-    testType: 'Stool',
-    testName: 'RBC',
-    result: '0-1',
-    referenceRange: '0-5',
-    units: 'per HPF',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10055',
-    patientId: 'PT-3318',
-    testDate: '2023-04-17',
-    testType: 'UA',
-    testName: 'pH',
-    result: '6.5',
-    referenceRange: '4.5-8.0',
-    units: '',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10056',
-    patientId: 'PT-3318',
-    testDate: '2023-04-17',
-    testType: 'UA',
-    testName: 'Protein',
-    result: 'Trace',
-    referenceRange: 'Negative',
-    units: '',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10057',
-    patientId: 'PT-3318',
-    testDate: '2023-04-17',
-    testType: 'UA',
-    testName: 'Glucose',
-    result: 'Negative',
-    referenceRange: 'Negative',
-    units: '',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10058',
-    patientId: 'PT-7712',
-    testDate: '2023-04-17',
-    testType: 'Glucose',
-    testName: 'Fasting Blood Glucose',
-    result: '126',
-    referenceRange: '70-99',
-    units: 'mg/dL',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10059',
-    patientId: 'PT-7712',
-    testDate: '2023-04-17',
-    testType: 'Glucose',
-    testName: 'HbA1c',
-    result: '7.2',
-    referenceRange: '<5.7',
-    units: '%',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10060',
-    patientId: 'PT-5501',
-    testDate: '2023-04-18',
-    testType: 'TFT',
-    testName: 'TSH',
-    result: '4.8',
-    referenceRange: '0.4-4.0',
-    units: 'mIU/L',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10061',
-    patientId: 'PT-5501',
-    testDate: '2023-04-18',
-    testType: 'TFT',
-    testName: 'Free T4',
-    result: '0.8',
-    referenceRange: '0.8-1.8',
-    units: 'ng/dL',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10062',
-    patientId: 'PT-5501',
-    testDate: '2023-04-18',
-    testType: 'TFT',
-    testName: 'Free T3',
-    result: '2.5',
-    referenceRange: '2.3-4.2',
-    units: 'pg/mL',
-    status: 'Normal'
-  },
-  {
-    id: 'LT-10063',
-    patientId: 'PT-2296',
-    testDate: '2023-04-18',
-    testType: 'Electrolytes',
-    testName: 'Sodium',
-    result: '148',
-    referenceRange: '135-145',
-    units: 'mmol/L',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10064',
-    patientId: 'PT-2296',
-    testDate: '2023-04-18',
-    testType: 'Electrolytes',
-    testName: 'Potassium',
-    result: '5.8',
-    referenceRange: '3.5-5.0',
-    units: 'mmol/L',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10065',
-    patientId: 'PT-2296',
-    testDate: '2023-04-18',
-    testType: 'Electrolytes',
-    testName: 'Chloride',
-    result: '110',
-    referenceRange: '98-107',
-    units: 'mmol/L',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10066',
-    patientId: 'PT-8843',
-    testDate: '2023-04-19',
-    testType: 'KFT',
-    testName: 'Creatinine',
-    result: '1.8',
-    referenceRange: '0.7-1.3',
-    units: 'mg/dL',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10067',
-    patientId: 'PT-8843',
-    testDate: '2023-04-19',
-    testType: 'KFT',
-    testName: 'BUN',
-    result: '28',
-    referenceRange: '7-20',
-    units: 'mg/dL',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10068',
-    patientId: 'PT-8843',
-    testDate: '2023-04-19',
-    testType: 'KFT',
-    testName: 'eGFR',
-    result: '45',
-    referenceRange: '>60',
-    units: 'mL/min/1.73m²',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10069',
-    patientId: 'PT-6127',
-    testDate: '2023-04-19',
-    testType: 'Coagulation',
-    testName: 'PT',
-    result: '16.2',
-    referenceRange: '11.0-13.5',
-    units: 'seconds',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10070',
-    patientId: 'PT-6127',
-    testDate: '2023-04-19',
-    testType: 'Coagulation',
-    testName: 'INR',
-    result: '1.4',
-    referenceRange: '0.8-1.1',
-    units: '',
-    status: 'Abnormal'
-  },
-  {
-    id: 'LT-10071',
-    patientId: 'PT-6127',
-    testDate: '2023-04-19',
-    testType: 'Coagulation',
-    testName: 'PTT',
-    result: '42',
-    referenceRange: '25-35',
-    units: 'seconds',
-    status: 'Abnormal'
+// Generate more sample data
+const generateLabTests = () => {
+  const patients = [
+    'PT-7823',
+    'PT-6591',
+    'PT-9034',
+    'PT-4527',
+    'PT-3318',
+    'PT-7712',
+    'PT-5501',
+    'PT-2296',
+    'PT-8843',
+    'PT-6127',
+    'PT-1234',
+    'PT-5678',
+    'PT-9012',
+    'PT-3456',
+    'PT-7890',
+    'PT-2468',
+    'PT-1357',
+    'PT-8642',
+    'PT-9753',
+    'PT-3141'
+  ];
+
+  const testDates = [
+    '2023-04-15',
+    '2023-04-16',
+    '2023-04-17',
+    '2023-04-18',
+    '2023-04-19',
+    '2023-04-20',
+    '2023-04-21',
+    '2023-04-22',
+    '2023-04-23',
+    '2023-04-24',
+    '2023-04-25',
+    '2023-04-26',
+    '2023-04-27',
+    '2023-04-28',
+    '2023-04-29'
+  ];
+
+  const testDetails = [
+    // CBC Tests
+    {
+      testType: 'CBC',
+      testName: 'Hemoglobin',
+      referenceRange: '13.5-17.5',
+      units: 'g/dL'
+    },
+    {
+      testType: 'CBC',
+      testName: 'WBC',
+      referenceRange: '4.5-11.0',
+      units: '10³/µL'
+    },
+    {
+      testType: 'CBC',
+      testName: 'RBC',
+      referenceRange: '4.5-5.9',
+      units: '10⁶/µL'
+    },
+    {
+      testType: 'CBC',
+      testName: 'Platelets',
+      referenceRange: '150-450',
+      units: '10³/µL'
+    },
+    {
+      testType: 'CBC',
+      testName: 'Hematocrit',
+      referenceRange: '41-50',
+      units: '%'
+    },
+    { testType: 'CBC', testName: 'MCV', referenceRange: '80-96', units: 'fL' },
+    { testType: 'CBC', testName: 'MCH', referenceRange: '27-33', units: 'pg' },
+    {
+      testType: 'CBC',
+      testName: 'MCHC',
+      referenceRange: '33-36',
+      units: 'g/dL'
+    },
+
+    // LFT Tests
+    { testType: 'LFT', testName: 'ALT', referenceRange: '7-55', units: 'U/L' },
+    { testType: 'LFT', testName: 'AST', referenceRange: '8-48', units: 'U/L' },
+    {
+      testType: 'LFT',
+      testName: 'Bilirubin Total',
+      referenceRange: '0.1-1.2',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'LFT',
+      testName: 'Bilirubin Direct',
+      referenceRange: '0.0-0.3',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'LFT',
+      testName: 'Alkaline Phosphatase',
+      referenceRange: '45-115',
+      units: 'U/L'
+    },
+    { testType: 'LFT', testName: 'GGT', referenceRange: '8-61', units: 'U/L' },
+    {
+      testType: 'LFT',
+      testName: 'Albumin',
+      referenceRange: '3.5-5.0',
+      units: 'g/dL'
+    },
+
+    // Lipid Tests
+    {
+      testType: 'Lipid',
+      testName: 'Total Cholesterol',
+      referenceRange: '<200',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'Lipid',
+      testName: 'LDL',
+      referenceRange: '<100',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'Lipid',
+      testName: 'HDL',
+      referenceRange: '>40',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'Lipid',
+      testName: 'Triglycerides',
+      referenceRange: '<150',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'Lipid',
+      testName: 'VLDL',
+      referenceRange: '<30',
+      units: 'mg/dL'
+    },
+
+    // Stool Tests
+    {
+      testType: 'Stool',
+      testName: 'Occult Blood',
+      referenceRange: 'Negative',
+      units: ''
+    },
+    {
+      testType: 'Stool',
+      testName: 'WBC',
+      referenceRange: '0-5',
+      units: 'per HPF'
+    },
+    {
+      testType: 'Stool',
+      testName: 'RBC',
+      referenceRange: '0-5',
+      units: 'per HPF'
+    },
+    {
+      testType: 'Stool',
+      testName: 'Parasites',
+      referenceRange: 'Not Seen',
+      units: ''
+    },
+
+    // Urinalysis Tests
+    { testType: 'UA', testName: 'pH', referenceRange: '4.5-8.0', units: '' },
+    {
+      testType: 'UA',
+      testName: 'Protein',
+      referenceRange: 'Negative',
+      units: ''
+    },
+    {
+      testType: 'UA',
+      testName: 'Glucose',
+      referenceRange: 'Negative',
+      units: ''
+    },
+    {
+      testType: 'UA',
+      testName: 'Ketones',
+      referenceRange: 'Negative',
+      units: ''
+    },
+    {
+      testType: 'UA',
+      testName: 'Blood',
+      referenceRange: 'Negative',
+      units: ''
+    },
+    {
+      testType: 'UA',
+      testName: 'Nitrite',
+      referenceRange: 'Negative',
+      units: ''
+    },
+
+    // Glucose Tests
+    {
+      testType: 'Glucose',
+      testName: 'Fasting Blood Glucose',
+      referenceRange: '70-99',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'Glucose',
+      testName: 'Random Blood Glucose',
+      referenceRange: '70-140',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'Glucose',
+      testName: '2-Hour Postprandial',
+      referenceRange: '<140',
+      units: 'mg/dL'
+    },
+
+    // Thyroid Function Tests
+    {
+      testType: 'TFT',
+      testName: 'TSH',
+      referenceRange: '0.4-4.0',
+      units: 'mIU/L'
+    },
+    {
+      testType: 'TFT',
+      testName: 'Free T4',
+      referenceRange: '0.8-1.8',
+      units: 'ng/dL'
+    },
+    {
+      testType: 'TFT',
+      testName: 'Free T3',
+      referenceRange: '2.3-4.2',
+      units: 'pg/mL'
+    },
+    {
+      testType: 'TFT',
+      testName: 'Total T4',
+      referenceRange: '5.0-12.0',
+      units: 'µg/dL'
+    },
+
+    // Electrolytes Tests
+    {
+      testType: 'Electrolytes',
+      testName: 'Sodium',
+      referenceRange: '135-145',
+      units: 'mmol/L'
+    },
+    {
+      testType: 'Electrolytes',
+      testName: 'Potassium',
+      referenceRange: '3.5-5.0',
+      units: 'mmol/L'
+    },
+    {
+      testType: 'Electrolytes',
+      testName: 'Chloride',
+      referenceRange: '98-107',
+      units: 'mmol/L'
+    },
+    {
+      testType: 'Electrolytes',
+      testName: 'Bicarbonate',
+      referenceRange: '22-29',
+      units: 'mmol/L'
+    },
+    {
+      testType: 'Electrolytes',
+      testName: 'Calcium',
+      referenceRange: '8.5-10.5',
+      units: 'mg/dL'
+    },
+
+    // Kidney Function Tests
+    {
+      testType: 'KFT',
+      testName: 'Creatinine',
+      referenceRange: '0.7-1.3',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'KFT',
+      testName: 'BUN',
+      referenceRange: '7-20',
+      units: 'mg/dL'
+    },
+    {
+      testType: 'KFT',
+      testName: 'eGFR',
+      referenceRange: '>60',
+      units: 'mL/min/1.73m²'
+    },
+    {
+      testType: 'KFT',
+      testName: 'Uric Acid',
+      referenceRange: '3.5-7.2',
+      units: 'mg/dL'
+    },
+
+    // Coagulation Tests
+    {
+      testType: 'Coagulation',
+      testName: 'PT',
+      referenceRange: '11.0-13.5',
+      units: 'seconds'
+    },
+    {
+      testType: 'Coagulation',
+      testName: 'INR',
+      referenceRange: '0.8-1.1',
+      units: ''
+    },
+    {
+      testType: 'Coagulation',
+      testName: 'PTT',
+      referenceRange: '25-35',
+      units: 'seconds'
+    },
+    {
+      testType: 'Coagulation',
+      testName: 'Bleeding Time',
+      referenceRange: '2-7',
+      units: 'minutes'
+    },
+
+    // HbA1c Tests
+    {
+      testType: 'HbA1c',
+      testName: 'HbA1c',
+      referenceRange: '<5.7',
+      units: '%'
+    },
+
+    // CRP Tests
+    {
+      testType: 'CRP',
+      testName: 'C-Reactive Protein',
+      referenceRange: '<3.0',
+      units: 'mg/L'
+    },
+    {
+      testType: 'CRP',
+      testName: 'High-Sensitivity CRP',
+      referenceRange: '<1.0',
+      units: 'mg/L'
+    },
+
+    // ESR Tests
+    {
+      testType: 'ESR',
+      testName: 'Erythrocyte Sedimentation Rate',
+      referenceRange: '0-15',
+      units: 'mm/hr'
+    },
+
+    // Vitamin Tests
+    {
+      testType: 'Vitamin',
+      testName: 'Vitamin B12',
+      referenceRange: '200-900',
+      units: 'pg/mL'
+    },
+    {
+      testType: 'Vitamin',
+      testName: 'Vitamin D, 25-OH',
+      referenceRange: '30-100',
+      units: 'ng/mL'
+    },
+    {
+      testType: 'Vitamin',
+      testName: 'Folate',
+      referenceRange: '>5.4',
+      units: 'ng/mL'
+    },
+
+    // Iron Studies
+    {
+      testType: 'Iron',
+      testName: 'Serum Iron',
+      referenceRange: '60-170',
+      units: 'µg/dL'
+    },
+    {
+      testType: 'Iron',
+      testName: 'Ferritin',
+      referenceRange: '30-400',
+      units: 'ng/mL'
+    },
+    {
+      testType: 'Iron',
+      testName: 'TIBC',
+      referenceRange: '240-450',
+      units: 'µg/dL'
+    },
+    {
+      testType: 'Iron',
+      testName: 'Transferrin Saturation',
+      referenceRange: '20-50',
+      units: '%'
+    }
+  ];
+
+  const statuses = ['Normal', 'Abnormal', 'Critical'];
+  const statusWeights = [0.6, 0.3, 0.1]; // 60% Normal, 30% Abnormal, 10% Critical
+
+  const generateRandomResult = (referenceRange: string, status: string) => {
+    // For numeric ranges like "70-99"
+    if (/^\d+(\.\d+)?-\d+(\.\d+)?$/.test(referenceRange)) {
+      const [min, max] = referenceRange.split('-').map(Number);
+      let result;
+
+      if (status === 'Normal') {
+        // Generate a value within the range
+        result = (Math.random() * (max - min) + min).toFixed(1);
+      } else if (status === 'Abnormal') {
+        // Generate a value slightly outside the range
+        const isHigh = Math.random() > 0.5;
+        result = isHigh
+          ? (max + Math.random() * (max * 0.2)).toFixed(1)
+          : (min - Math.random() * (min * 0.2)).toFixed(1);
+      } else {
+        // Critical
+        // Generate a value far outside the range
+        const isHigh = Math.random() > 0.5;
+        result = isHigh
+          ? (max + Math.random() * (max * 0.5)).toFixed(1)
+          : (min - Math.random() * (min * 0.5)).toFixed(1);
+      }
+
+      return result;
+    }
+
+    // For ranges with < or > like "<200" or ">40"
+    if (/<\d+(\.\d+)?/.test(referenceRange)) {
+      const threshold = Number(referenceRange.replace('<', ''));
+
+      if (status === 'Normal') {
+        return (threshold - Math.random() * (threshold * 0.3)).toFixed(1);
+      } else if (status === 'Abnormal') {
+        return (threshold + Math.random() * (threshold * 0.2)).toFixed(1);
+      } else {
+        // Critical
+        return (threshold + Math.random() * (threshold * 0.5)).toFixed(1);
+      }
+    }
+
+    if (/>\d+(\.\d+)?/.test(referenceRange)) {
+      const threshold = Number(referenceRange.replace('>', ''));
+
+      if (status === 'Normal') {
+        return (threshold + Math.random() * (threshold * 0.3)).toFixed(1);
+      } else if (status === 'Abnormal') {
+        return (threshold - Math.random() * (threshold * 0.2)).toFixed(1);
+      } else {
+        // Critical
+        return (threshold - Math.random() * (threshold * 0.5)).toFixed(1);
+      }
+    }
+
+    // For non-numeric ranges like "Negative"
+    if (referenceRange === 'Negative') {
+      if (status === 'Normal') {
+        return 'Negative';
+      } else if (status === 'Abnormal') {
+        return 'Trace';
+      } else {
+        // Critical
+        return 'Positive';
+      }
+    }
+
+    if (referenceRange === 'Not Seen') {
+      if (status === 'Normal') {
+        return 'Not Seen';
+      } else if (status === 'Abnormal') {
+        return 'Few Seen';
+      } else {
+        // Critical
+        return 'Many Seen';
+      }
+    }
+
+    // Default fallback
+    return '5.0';
+  };
+
+  // Generate a large dataset
+  const labTests = [];
+  let id = 10000;
+
+  // Generate 200 test records
+  for (let i = 0; i < 200; i++) {
+    const patientId = patients[Math.floor(Math.random() * patients.length)];
+    const testDate = testDates[Math.floor(Math.random() * testDates.length)];
+    const testDetail =
+      testDetails[Math.floor(Math.random() * testDetails.length)];
+
+    // Randomly select status based on weights
+    const randomValue = Math.random();
+    let statusIndex = 0;
+    let cumulativeWeight = 0;
+
+    for (let j = 0; j < statusWeights.length; j++) {
+      cumulativeWeight += statusWeights[j];
+      if (randomValue <= cumulativeWeight) {
+        statusIndex = j;
+        break;
+      }
+    }
+
+    const status = statuses[statusIndex];
+    const result = generateRandomResult(testDetail.referenceRange, status);
+
+    labTests.push({
+      id: `LT-${id++}`,
+      patientId,
+      testDate,
+      testType: testDetail.testType,
+      testName: testDetail.testName,
+      result,
+      referenceRange: testDetail.referenceRange,
+      units: testDetail.units,
+      status
+    });
   }
-];
+
+  return labTests;
+};
+
+// Generate the lab tests
+const labTests = generateLabTests();
 
 type SortDirection = 'asc' | 'desc' | null;
 type SortField =
@@ -372,13 +600,36 @@ type SortField =
 
 export function PatientLabs() {
   const [selectedTestType, setSelectedTestType] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortField, setSortField] = useState<SortField>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState('20');
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTestType, searchQuery]);
 
   // Filter records based on selected test type
-  const filteredRecords = selectedTestType
+  const filteredByType = selectedTestType
     ? labTests.filter((test) => test.testType === selectedTestType)
     : labTests;
+
+  // Filter records based on search query
+  const filteredRecords = searchQuery
+    ? filteredByType.filter((record) => {
+        const query = searchQuery.toLowerCase();
+        return (
+          record.patientId.toLowerCase().includes(query) ||
+          record.testDate.includes(query) ||
+          record.testType.toLowerCase().includes(query) ||
+          record.testName.toLowerCase().includes(query) ||
+          record.result.toLowerCase().includes(query) ||
+          record.status.toLowerCase().includes(query)
+        );
+      })
+    : filteredByType;
 
   // Sort records based on sort field and direction
   const sortedRecords = [...filteredRecords].sort((a, b) => {
@@ -390,6 +641,14 @@ export function PatientLabs() {
       return a[sortField] < b[sortField] ? 1 : -1;
     }
   });
+
+  // Paginate records
+  const pageSizeNumber = Number.parseInt(pageSize);
+  const totalPages = Math.ceil(sortedRecords.length / pageSizeNumber);
+  const paginatedRecords = sortedRecords.slice(
+    (currentPage - 1) * pageSizeNumber,
+    currentPage * pageSizeNumber
+  );
 
   // Handle sort click
   const handleSort = (field: SortField) => {
@@ -435,7 +694,10 @@ export function PatientLabs() {
   const getTestTypeCounts = () => {
     const counts: Record<string, number> = {};
 
-    labTests.forEach((test) => {
+    // If search is active, count from filtered records
+    const recordsToCount = searchQuery ? filteredRecords : labTests;
+
+    recordsToCount.forEach((test) => {
       if (!counts[test.testType]) {
         counts[test.testType] = 0;
       }
@@ -446,6 +708,22 @@ export function PatientLabs() {
   };
 
   const testTypeCounts = getTestTypeCounts();
+
+  // Clear search
+  const handleClearSearch = () => {
+    setSearchQuery('');
+  };
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Handle page size change
+  const handlePageSizeChange = (value: string) => {
+    setPageSize(value);
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
 
   return (
     <div className="fluid mx-auto">
@@ -498,96 +776,232 @@ export function PatientLabs() {
         <div className="flex-grow">
           <div className="gap-4">
             <Card>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead
-                      className="cursor-pointer"
-                      onClick={() => handleSort('patientId')}
+              <CardHeader className="border-b-1">
+                {/* Search Bar and Page Size Selector */}
+                <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder="Search by patient ID, test name, result..."
+                      className="pl-8 pr-10"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    {searchQuery && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-1 top-1 h-8 w-8 rounded-full p-0"
+                        onClick={handleClearSearch}
+                      >
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Clear search</span>
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">
+                      Show:
+                    </span>
+                    <Select
+                      value={pageSize}
+                      onValueChange={handlePageSizeChange}
                     >
-                      <div className="flex items-center">
-                        Patient ID
-                        {renderSortIcon('patientId')}
-                      </div>
-                    </TableHead>
-                    <TableHead
-                      className="cursor-pointer"
-                      onClick={() => handleSort('testDate')}
-                    >
-                      <div className="flex items-center">
-                        Test Date
-                        {renderSortIcon('testDate')}
-                      </div>
-                    </TableHead>
-                    <TableHead
-                      className="cursor-pointer"
-                      onClick={() => handleSort('testType')}
-                    >
-                      <div className="flex items-center">
-                        Test Type
-                        {renderSortIcon('testType')}
-                      </div>
-                    </TableHead>
-                    <TableHead
-                      className="cursor-pointer"
-                      onClick={() => handleSort('testName')}
-                    >
-                      <div className="flex items-center">
-                        Test Name
-                        {renderSortIcon('testName')}
-                      </div>
-                    </TableHead>
-                    <TableHead
-                      className="cursor-pointer text-right"
-                      onClick={() => handleSort('result')}
-                    >
-                      <div className="flex items-center justify-end">
-                        Result
-                        {renderSortIcon('result')}
-                      </div>
-                    </TableHead>
-                    <TableHead>Reference Range</TableHead>
-                    <TableHead>Units</TableHead>
-                    <TableHead
-                      className="cursor-pointer"
-                      onClick={() => handleSort('status')}
-                    >
-                      <div className="flex items-center">
-                        Status
-                        {renderSortIcon('status')}
-                      </div>
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedRecords.length === 0 ? (
+                      <SelectTrigger className="w-[80px]">
+                        <SelectValue placeholder="20" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="25">25</SelectItem>
+                        <SelectItem value="50">50</SelectItem>
+                        <SelectItem value="100">100</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {/* Results Count */}
+                <div className="mb-2 text-sm text-muted-foreground">
+                  {filteredRecords.length}{' '}
+                  {filteredRecords.length === 1 ? 'result' : 'results'} found
+                  {searchQuery && (
+                    <>
+                      {' '}
+                      for <span className="font-medium">"{searchQuery}"</span>
+                    </>
+                  )}
+                  {filteredRecords.length > 0 && (
+                    <>
+                      {' '}
+                      | Showing {(currentPage - 1) * pageSizeNumber + 1}-
+                      {Math.min(
+                        currentPage * pageSizeNumber,
+                        filteredRecords.length
+                      )}{' '}
+                      of {filteredRecords.length}
+                    </>
+                  )}
+                </div>
+
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={8} className="text-center">
-                        No records found
-                      </TableCell>
+                      <TableHead
+                        className="cursor-pointer"
+                        onClick={() => handleSort('patientId')}
+                      >
+                        <div className="flex items-center">
+                          Patient ID
+                          {renderSortIcon('patientId')}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer"
+                        onClick={() => handleSort('testDate')}
+                      >
+                        <div className="flex items-center">
+                          Test Date
+                          {renderSortIcon('testDate')}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer"
+                        onClick={() => handleSort('testType')}
+                      >
+                        <div className="flex items-center">
+                          Test Type
+                          {renderSortIcon('testType')}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer"
+                        onClick={() => handleSort('testName')}
+                      >
+                        <div className="flex items-center">
+                          Test Name
+                          {renderSortIcon('testName')}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="cursor-pointer text-right"
+                        onClick={() => handleSort('result')}
+                      >
+                        <div className="flex items-center justify-end">
+                          Result
+                          {renderSortIcon('result')}
+                        </div>
+                      </TableHead>
+                      <TableHead>Reference Range</TableHead>
+                      <TableHead>Units</TableHead>
+                      <TableHead
+                        className="cursor-pointer"
+                        onClick={() => handleSort('status')}
+                      >
+                        <div className="flex items-center">
+                          Status
+                          {renderSortIcon('status')}
+                        </div>
+                      </TableHead>
                     </TableRow>
-                  ) : (
-                    sortedRecords.map((record) => (
-                      <TableRow key={record.id}>
-                        <TableCell className="font-medium">
-                          {record.patientId}
-                        </TableCell>
-                        <TableCell>{record.testDate}</TableCell>
-                        <TableCell>{record.testType}</TableCell>
-                        <TableCell>{record.testName}</TableCell>
-                        <TableCell className="text-right">
-                          {record.result}
-                        </TableCell>
-                        <TableCell>{record.referenceRange}</TableCell>
-                        <TableCell>{record.units}</TableCell>
-                        <TableCell className={getStatusColor(record.status)}>
-                          {record.status}
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedRecords.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={8} className="text-center py-8">
+                          {searchQuery ? (
+                            <div>
+                              <p className="text-muted-foreground">
+                                No results found for "{searchQuery}"
+                              </p>
+                              <Button
+                                variant="link"
+                                onClick={handleClearSearch}
+                                className="mt-2"
+                              >
+                                Clear search
+                              </Button>
+                            </div>
+                          ) : (
+                            <p className="text-muted-foreground">
+                              No records found
+                            </p>
+                          )}
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+                    ) : (
+                      paginatedRecords.map((record) => (
+                        <TableRow key={record.id}>
+                          <TableCell className="font-medium">
+                            {record.patientId}
+                          </TableCell>
+                          <TableCell>{record.testDate}</TableCell>
+                          <TableCell>{record.testType}</TableCell>
+                          <TableCell>{record.testName}</TableCell>
+                          <TableCell className="text-right">
+                            {record.result}
+                          </TableCell>
+                          <TableCell>{record.referenceRange}</TableCell>
+                          <TableCell>{record.units}</TableCell>
+                          <TableCell className={getStatusColor(record.status)}>
+                            {record.status}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+              <CardFooter>
+                {/* Pagination */}
+                {paginatedRecords.length > 0 && (
+                  <div className="flex items-center justify-between px-4 py-4 border-t">
+                    <div className="text-sm text-muted-foreground">
+                      Page {currentPage} of {totalPages}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(1)}
+                        disabled={currentPage === 1}
+                      >
+                        <ChevronLeft className="h-4 w-4 mr-1" />
+                        First
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        <span className="sr-only">Previous</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                        <span className="sr-only">Next</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(totalPages)}
+                        disabled={currentPage === totalPages}
+                      >
+                        Last
+                        <ChevronRight className="h-4 w-4 ml-1" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardFooter>
             </Card>
           </div>
         </div>
