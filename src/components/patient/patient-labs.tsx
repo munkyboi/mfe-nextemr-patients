@@ -56,24 +56,6 @@ const generateLabTests = () => {
     'PT-3141'
   ];
 
-  const testDates = [
-    '2025-04-15',
-    '2025-04-16',
-    '2025-04-17',
-    '2025-04-18',
-    '2025-04-24',
-    '2025-04-26',
-    '2025-04-28',
-    '2025-03-03',
-    '2025-03-04',
-    '2025-03-05',
-    '2025-03-12',
-    '2025-03-18',
-    '2025-03-22',
-    '2025-03-25',
-    '2025-03-29'
-  ];
-
   const testDetails = [
     // CBC Tests
     {
@@ -530,7 +512,7 @@ const generateLabTests = () => {
   const labTests = [];
   let id = 10000;
 
-  // Generate 200 test records
+  // Generate 432 test records
   for (let i = 0; i < 432; i++) {
     const patientId = patients[Math.floor(Math.random() * patients.length)];
     const testDate = randomDateFrom('2024-01-01');
