@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn, randomDateFrom } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
 import {
@@ -28,25 +28,8 @@ import {
   SelectValue
 } from '../ui/select';
 import { useDebounce } from '@/hooks/use-debounce';
-
-// Sample data for test types
-const testTypes = [
-  { id: 1, name: 'CBC', fullName: 'Complete Blood Count' },
-  { id: 2, name: 'LFT', fullName: 'Liver Function Tests' },
-  { id: 3, name: 'Lipid', fullName: 'Lipid Panel' },
-  { id: 4, name: 'Stool', fullName: 'Stool Examination' },
-  { id: 5, name: 'UA', fullName: 'Urinalysis' },
-  { id: 6, name: 'Glucose', fullName: 'Blood Glucose' },
-  { id: 7, name: 'TFT', fullName: 'Thyroid Function Tests' },
-  { id: 8, name: 'Electrolytes', fullName: 'Electrolytes Panel' },
-  { id: 9, name: 'KFT', fullName: 'Kidney Function Tests' },
-  { id: 10, name: 'Coagulation', fullName: 'Coagulation Tests' },
-  { id: 11, name: 'HbA1c', fullName: 'Glycated Hemoglobin' },
-  { id: 12, name: 'CRP', fullName: 'C-Reactive Protein' },
-  { id: 13, name: 'ESR', fullName: 'Erythrocyte Sedimentation Rate' },
-  { id: 14, name: 'Vitamin', fullName: 'Vitamin Levels' },
-  { id: 15, name: 'Iron', fullName: 'Iron Studies' }
-];
+import { useSidebar } from '../ui/sidebar';
+import { useReferenceData } from '@/context/reference.context';
 
 // Generate more sample data
 const generateLabTests = () => {
@@ -78,17 +61,17 @@ const generateLabTests = () => {
     '2025-04-16',
     '2025-04-17',
     '2025-04-18',
-    '2025-04-19',
-    '2025-04-20',
-    '2025-04-21',
-    '2025-04-22',
-    '2025-04-23',
     '2025-04-24',
-    '2025-04-25',
     '2025-04-26',
-    '2025-04-27',
     '2025-04-28',
-    '2025-04-29'
+    '2025-03-03',
+    '2025-03-04',
+    '2025-03-05',
+    '2025-03-12',
+    '2025-03-18',
+    '2025-03-22',
+    '2025-03-25',
+    '2025-03-29'
   ];
 
   const testDetails = [
@@ -548,9 +531,9 @@ const generateLabTests = () => {
   let id = 10000;
 
   // Generate 200 test records
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 432; i++) {
     const patientId = patients[Math.floor(Math.random() * patients.length)];
-    const testDate = testDates[Math.floor(Math.random() * testDates.length)];
+    const testDate = randomDateFrom('2024-01-01');
     const testDetail =
       testDetails[Math.floor(Math.random() * testDetails.length)];
 
@@ -602,11 +585,15 @@ type SortField =
 export function PatientLabs() {
   const [selectedTestType, setSelectedTestType] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortField, setSortField] = useState<SortField>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [sortField, setSortField] = useState<SortField>('testDate');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState('25');
   const debouncedQuery = useDebounce(searchQuery, 500);
+  const { open: sideBarOpen } = useSidebar();
+  const { getReferenceDataByType } = useReferenceData();
+
+  const testTypes = getReferenceDataByType('lab_test');
 
   // Reset to first page when filters change
   useEffect(() => {
@@ -746,27 +733,27 @@ export function PatientLabs() {
                     ({labTests.length})
                   </span>
                 </li>
-                {testTypes.map((type) => (
+                {testTypes?.map((type) => (
                   <li
                     key={type.id}
                     className={cn(
                       'cursor-pointer px-3 py-2 hover:bg-muted border-b-1',
-                      selectedTestType === type.name && 'bg-muted'
+                      selectedTestType === type.label && 'bg-muted'
                     )}
                     onClick={() =>
-                      testTypeCounts[type.name] &&
-                      setSelectedTestType(type.name)
+                      testTypeCounts[type.label] &&
+                      setSelectedTestType(type.label)
                     }
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex flex-col">
-                        <span>{type.name}</span>
+                        <span>{type.label}</span>
                         <span className="text-xs text-muted-foreground">
-                          {type.fullName}
+                          {type.value}
                         </span>
                       </div>
                       <span className="text-muted-foreground">
-                        ({testTypeCounts[type.name] || 0})
+                        ({testTypeCounts[type.label] || 0})
                       </span>
                     </div>
                   </li>
@@ -776,8 +763,8 @@ export function PatientLabs() {
           </div>
         </div>
         <div className="flex-grow">
-          <div className="gap-4">
-            <Card>
+          <div className="flex flex-col">
+            <Card className="gap-0">
               <CardHeader className="border-b-1 pb-4">
                 {/* Search Bar and Page Size Selector */}
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center pb-2">
@@ -849,12 +836,20 @@ export function PatientLabs() {
                   )}
                 </div>
               </CardHeader>
-              <CardContent className="">
-                <Table>
+              <CardContent
+                className={cn(
+                  'flex flex-col px-0 h-full sm:h-[calc(100dvh-355px-2rem)] w-[calc(100dvw-3rem)] overflow-auto',
+                  {
+                    'sm:w-[calc(100dvw-200px-2rem)]': !sideBarOpen,
+                    'sm:w-[calc(100dvw-200px-2rem-20px-256px)]': sideBarOpen
+                  }
+                )}
+              >
+                <Table className="relative">
                   <TableHeader>
                     <TableRow>
                       <TableHead
-                        className="cursor-pointer"
+                        className="cursor-pointer sticky top-[0px] bg-white"
                         onClick={() => handleSort('patientId')}
                       >
                         <div className="flex items-center">
@@ -863,7 +858,7 @@ export function PatientLabs() {
                         </div>
                       </TableHead>
                       <TableHead
-                        className="cursor-pointer"
+                        className="cursor-pointer sticky top-[0px] bg-white"
                         onClick={() => handleSort('testDate')}
                       >
                         <div className="flex items-center">
@@ -872,7 +867,7 @@ export function PatientLabs() {
                         </div>
                       </TableHead>
                       <TableHead
-                        className="cursor-pointer"
+                        className="cursor-pointer sticky top-[0px] bg-white"
                         onClick={() => handleSort('testType')}
                       >
                         <div className="flex items-center">
@@ -881,7 +876,7 @@ export function PatientLabs() {
                         </div>
                       </TableHead>
                       <TableHead
-                        className="cursor-pointer"
+                        className="cursor-pointer sticky top-[0px] bg-white"
                         onClick={() => handleSort('testName')}
                       >
                         <div className="flex items-center">
@@ -890,7 +885,7 @@ export function PatientLabs() {
                         </div>
                       </TableHead>
                       <TableHead
-                        className="cursor-pointer text-right"
+                        className="cursor-pointer text-right sticky top-[0px] bg-white"
                         onClick={() => handleSort('result')}
                       >
                         <div className="flex items-center justify-end">
@@ -898,10 +893,14 @@ export function PatientLabs() {
                           {renderSortIcon('result')}
                         </div>
                       </TableHead>
-                      <TableHead>Reference Range</TableHead>
-                      <TableHead>Units</TableHead>
+                      <TableHead className="sticky top-[0px] bg-white">
+                        Reference Range
+                      </TableHead>
+                      <TableHead className="sticky top-[0px] bg-white">
+                        Units
+                      </TableHead>
                       <TableHead
-                        className="cursor-pointer"
+                        className="cursor-pointer sticky top-[0px] bg-white"
                         onClick={() => handleSort('status')}
                       >
                         <div className="flex items-center">

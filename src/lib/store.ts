@@ -2,19 +2,22 @@ import { configureStore } from '@reduxjs/toolkit';
 import { patientsApi } from './api/patients.api';
 import { queueApi } from './api/queue.api';
 import { physiciansApi } from './api/physicians.api';
+import { referenceApi } from './api/reference.api';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       [patientsApi.reducerPath]: patientsApi.reducer,
       [queueApi.reducerPath]: queueApi.reducer,
-      [physiciansApi.reducerPath]: physiciansApi.reducer
+      [physiciansApi.reducerPath]: physiciansApi.reducer,
+      [referenceApi.reducerPath]: referenceApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
         patientsApi.middleware,
         queueApi.middleware,
-        physiciansApi.middleware
+        physiciansApi.middleware,
+        referenceApi.middleware
       )
   });
 };

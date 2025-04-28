@@ -3,6 +3,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const nextConfig: NextConfig = {
   /* config options here */
+  allowedDevOrigins: ['local-origin.dev', '*.local-origin.dev'],
   async rewrites() {
     return [
       {

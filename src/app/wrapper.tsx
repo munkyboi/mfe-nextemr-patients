@@ -1,16 +1,19 @@
 import { usePatients } from '@/context/patients.context';
 import { usePhysicians } from '@/context/physicians.context';
 import { useQueue } from '@/context/queue.context';
+import { useReferenceData } from '@/context/reference.context';
 import { QUEUE_POLLING } from '@/lib/api/api.constants';
 import { useLazyGetPatientsQuery } from '@/lib/api/patients.api';
 import { useLazyGetPhysiciansListQuery } from '@/lib/api/physicians.api';
 import { useLazyGetQueueListQuery } from '@/lib/api/queue.api';
+import { useLazyGetAllReferenceQuery } from '@/lib/api/reference.api';
 import { PropsWithChildren, useEffect } from 'react';
 
 export function InitializeWrapper({ children }: PropsWithChildren) {
   const { saveAllPatients } = usePatients();
   const { saveAllQueue } = useQueue();
   const { saveAllPhysicians } = usePhysicians();
+  const { saveAllReferenceData } = useReferenceData();
   const [getPatients, { isLoading: patientsIsLoading }] =
     useLazyGetPatientsQuery();
   const [getQueueList, { data: queueListData, isLoading: queueIsLoading }] =
@@ -19,7 +22,14 @@ export function InitializeWrapper({ children }: PropsWithChildren) {
     });
   const [getPhysicians, { isLoading: physiciansIsLoading }] =
     useLazyGetPhysiciansListQuery();
-  const isLoading = patientsIsLoading || queueIsLoading || physiciansIsLoading;
+  const [getReferenceData, { isLoading: referenceIsLoading }] =
+    useLazyGetAllReferenceQuery();
+
+  const isLoading =
+    patientsIsLoading ||
+    queueIsLoading ||
+    physiciansIsLoading ||
+    referenceIsLoading;
 
   useEffect(() => {
     (async () => {
@@ -40,6 +50,12 @@ export function InitializeWrapper({ children }: PropsWithChildren) {
         saveAllQueue(queueResult.data);
       } catch (error) {
         console.log(`Getting queue list failed - ${error}`);
+      }
+      try {
+        const referenceResult = await getReferenceData().unwrap();
+        saveAllReferenceData(referenceResult.data);
+      } catch (error) {
+        console.log(`Getting reference data failed - ${error}`);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -266,3 +266,22 @@ export const generateVariantByStatus = (status: string = '') => {
 
   return result;
 };
+
+export const randomDateFrom = (startDateStr: string) => {
+  const startDate = new Date(startDateStr);
+  const today = new Date();
+
+  // Generate a random timestamp between startDate and today
+  const randomTime =
+    startDate.getTime() +
+    Math.random() * (today.getTime() - startDate.getTime());
+
+  const randomDate = new Date(randomTime);
+
+  // Format to "YYYY-MM-DD"
+  const year = randomDate.getFullYear();
+  const month = String(randomDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const day = String(randomDate.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};

@@ -8,5 +8,8 @@ export const ENDPOINTS = {
   UPDATE_QUEUE: '/api/queue',
 
   // physicians api
-  GET_ALL_PHYSICIANS: '/api/physicians'
+  GET_ALL_PHYSICIANS: '/api/physicians',
+
+  // reference data api
+  GET_ALL_REFERENCE: '/api/reference'
 };
